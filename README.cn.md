@@ -1,4 +1,4 @@
-# Offline AI Client(WIP)
+# Offline AI Client Core(WIP)
 
 > 【[English](./README.md)|中文】
 ---

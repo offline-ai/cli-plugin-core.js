@@ -2,11 +2,9 @@ import cj from 'color-json'
 import {Args, Flags} from '@oclif/core'
 import { parseJsJson } from '@isdk/ai-tool'
 import { LogLevelMap, logLevel } from '@isdk/ai-tool-agent'
+import { AICommand, AICommonFlags, expandPath, showBanner } from '@offline-ai/cli-common'
 
-import { AICommand, AICommonFlags } from '../../lib/ai-command.js'
 import {runScript} from '../../../lib/run-script.js'
-import { showBanner } from '../../lib/help.js'
-import { expandPath } from '@offline-ai/cli-common'
 
 export default class RunScript extends AICommand {
   static args = {

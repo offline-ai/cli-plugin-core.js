@@ -1,4 +1,4 @@
-# Offline AI Client(WIP)
+# Offline AI Client Core(WIP)
 
 > 【English|[中文](./README.cn.md)】
 ---
@@ -268,7 +268,7 @@ Specific script instruction manual see: [Programmable Prompt Engine Specificatio
 # Commands
 
 <!-- commands -->
-- [Offline AI Client(WIP)](#offline-ai-clientwip)
+- [Offline AI Client Core(WIP)](#offline-ai-client-corewip)
 - [Quick Start](#quick-start)
   - [Install](#install)
   - [Run](#run)
