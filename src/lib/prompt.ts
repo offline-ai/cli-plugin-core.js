@@ -159,6 +159,7 @@ function completer(action: string, data:{result?: string[], past?: string[], pre
       };
     case 'prev':
     case 'undo':
+      if (value && !result.includes(value)) {result.push(value)}
       rest = result.slice(0, result.length - 1);
       prev = result[result.length - 1] || '';
       if (!filtered) {
@@ -177,6 +178,7 @@ function completer(action: string, data:{result?: string[], past?: string[], pre
       }
     case 'next':
     case 'redo':
+      if (value && !result.includes(value)) {result.push(value)}
       rest = result.slice(1);
       prev = result[0] || '';
       return {
