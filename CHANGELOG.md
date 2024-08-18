@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.3.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.2.0...v0.3.0) (2024-08-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* only export runScript
+
+### Features
+
+* add expandPath to scope ([33410d0](https://github.com/offline-ai/cli-plugin-core.js/commit/33410d09bcfd7479c51e653b0ed5ffdd277db16b))
+
+
+### Bug Fixes
+
+* **input:** should save input first before switch to next/prev item ([8b09a93](https://github.com/offline-ai/cli-plugin-core.js/commit/8b09a930ac2bad560a39595f502e870859e1f595))
+
+
+### Refactor
+
+* only export runScript ([1a71f59](https://github.com/offline-ai/cli-plugin-core.js/commit/1a71f5984231e2605757b4060b6aa509936bc6b9))
+
 ## [0.2.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.1.3...v0.2.0) (2024-08-16)
 
 
