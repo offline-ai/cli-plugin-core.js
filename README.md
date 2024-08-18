@@ -44,9 +44,9 @@ npm install -g @offline-ai/cli
 
 ```
 USAGE
-  $ ai run [DATA] [--json] [-c <value>] [--banner] [-u <value>] [-s
-    <value>...] [-l silence|fatal|error|warn|info|debug|trace] [-h <value>] [-n] [-k] [-t <value> -i] [--no-chats]
-    [--no-inputs ] [-m] [-f <value>] [-d <value>] [-a <value>] [-b <value>] [-p <value>...] [--consoleClear]
+  $ ai run [DATA] [--json] [-c <value>] [--banner] [-u <value>] [-s <value>...] [-l
+    silence|fatal|error|warn|info|debug|trace] [-h <value>] [-n] [-k] [-t <value> -i] [--no-chats] [--no-inputs ] [-m]
+    [-f <value>] [-d <value>] [-a <value>] [-b <value>] [-p <value>...] [--consoleClear]
 
 ARGUMENTS
   DATA  the json data which will be passed to the ai-agent script
