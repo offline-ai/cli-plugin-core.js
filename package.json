@@ -55,8 +55,7 @@
   "files": [
     "/bin",
     "/dist",
-    "/oclif.manifest.json",
-    "/theme.json"
+    "/oclif.manifest.json"
   ],
   "keywords": [
     "oclif",
