@@ -11,6 +11,7 @@ import { ConfigFile, getMultiLevelExtname, parseJsJson, wait } from '@isdk/ai-to
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
+import { expandPath } from '@offline-ai/cli-common'
 // import { initTools } from './init-tools.js'
 
 class AIScriptEx extends AIScriptServer {
@@ -102,7 +103,17 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   )
 
   try {
-    script = await AIScriptEx.loadFile(filename, {chatsDir: options.chatsDir}, {ABORT_SEARCH_SCRIPTS_SIGNAL: aborter.signal})
+    script = await AIScriptEx.loadFile(filename,
+      {chatsDir: options.chatsDir},
+      {
+        ABORT_SEARCH_SCRIPTS_SIGNAL: aborter.signal,
+        FUNC_SCOPE: {
+          expandPath: function(path: string) {
+            return expandPath(path, options)
+          },
+        }
+      },
+    )
   } catch(err) {
     console.error('Load script error:',err)
     process.exit(1)
