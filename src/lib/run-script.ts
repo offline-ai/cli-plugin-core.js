@@ -107,6 +107,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       {chatsDir: options.chatsDir},
       {
         ABORT_SEARCH_SCRIPTS_SIGNAL: aborter.signal,
+        USER_ENV: options,
         FUNC_SCOPE: {
           expandPath: function(path: string) {
             return expandPath(path, options)
