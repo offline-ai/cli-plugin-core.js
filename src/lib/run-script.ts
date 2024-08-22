@@ -9,10 +9,13 @@ import _logUpdate from 'log-update'
 import { get as getByPath } from 'lodash-es'
 import { ConfigFile, getMultiLevelExtname, parseJsJson, wait } from '@isdk/ai-tool'
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
-import { detectTextLanguage as detectLang } from '@isdk/detect-text-language'
+import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
 import { expandPath } from '@offline-ai/cli-common'
 // import { initTools } from './init-tools.js'
+
+const endWithSpacesRegEx = /[\s\n\r]+$/
+const startWithSpacesRegEx = /^[\s\n\r]+/
 
 class AIScriptEx extends AIScriptServer {
   $detectLang(text: string) {
@@ -33,6 +36,7 @@ interface IRunScriptOptions {
   agentDirs?: string[],
   theme?: any,
   consoleClear?: boolean,
+  userPreferredLanguage?: string
 }
 
 function logUpdate(...text: string[]) {
@@ -179,6 +183,9 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       // }
       if (!isSilence && llmLastContent) {
         if (options.consoleClear) {
+          if (llmResult.stop) {
+            llmLastContent = ''
+          }
           logUpdate(llmLastContent)
         } else {
           process.stdout.write(s)
@@ -284,16 +291,57 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
           }
         }
         if (result) {
-          if (typeof result !== 'string') { result = ux.colorizeJson(result, {pretty: true, theme: options.theme?.json})}
-          input.write(colors.yellow(aiName+ ': ') + result + '\n')
+          const isString = typeof result === 'string'
+          if (!isString) {
+            result = ux.colorizeJson(result, {pretty: true, theme: options.theme?.json})
+          }
+          let str = colors.yellow(aiName+ ': ') + result.replace(endWithSpacesRegEx, '') + '\n'
+          if (isString) {
+            const userPreferredLanguage = options.userPreferredLanguage
+            if (userPreferredLanguage && result) {
+              const translated = await trans(result, userPreferredLanguage, runtime)
+              if (translated) {
+                str += (translated.replace(startWithSpacesRegEx, '') + '\n')
+              }
+            }
+          }
+          input.write(str)
         }
       } else {
         console.log('bye!')
       }
 
     } while (!quit)
+  } else {
+    const userPreferredLanguage = options.userPreferredLanguage
+    if (userPreferredLanguage && result) {
+      const translated = await trans(result, userPreferredLanguage, runtime)
+      if (translated) {
+        result += translated
+      }
+    }
   }
   return result
+}
+
+async function trans(content: string|Record<string, any>, userPreferredLanguage: string, runtime: AIScriptEx) {
+  if (content && typeof content !== 'string') {
+    content = content.content as string
+  }
+  const sep = '\n━━━━━━━━━━━━━\n'
+
+  if (userPreferredLanguage && typeof content === 'string') {
+    const target = getLanguageFromIso6391(userPreferredLanguage)
+    if (target) {
+      const langInfo = detectTextLangEx(content.slice(0, 140))
+      if (langInfo && langInfo.iso6391 !== userPreferredLanguage) {
+        const _translated = await runtime.$exec({id: 'translator', args: {lang: langInfo.name, content, target }})
+        if (_translated && typeof _translated === 'string') {
+          return sep + '【'+target+'】:: ' + _translated
+        }
+      }
+    }
+  }
 }
 
 export function getFrame(arr, i) {
