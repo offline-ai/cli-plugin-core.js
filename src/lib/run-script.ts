@@ -14,8 +14,9 @@ import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
 import { expandPath } from '@offline-ai/cli-common'
 // import { initTools } from './init-tools.js'
 
-const endWithSpacesRegEx = /[\s\n\r]+$/
-const startWithSpacesRegEx = /^[\s\n\r]+/
+// const endWithSpacesRegEx = /[\s\n\r]+$/
+// const startWithSpacesRegEx = /^[\s\n\r]+/
+const YouCharName = 'You:'
 
 class AIScriptEx extends AIScriptServer {
   $detectLang(text: string) {
@@ -37,7 +38,9 @@ interface IRunScriptOptions {
   theme?: any,
   consoleClear?: boolean,
   userPreferredLanguage?: string
+  aiPreferredLanguage?: string
   ThisCmd?: any
+  streamEcho?: boolean|string
 }
 
 function logUpdate(...text: string[]) {
@@ -187,9 +190,16 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         runtime.abortTool('quit')
         process.emit('SIGINT')
       }
+
+      if (options.streamEcho === false) {return}
+
       if (count !== retryCount) {
         retryCount = count
         s += colors.blue(`<续:${count}>`)
+      }
+      if (options.streamEcho === 'line' && (s).includes('\n')) {
+        // logUpdate.clear(options.consoleClear)
+        llmLastContent = ''
       }
       llmLastContent += s
       // if (llmLastContent.length > 100) {
@@ -249,7 +259,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       llmLastContent = ''
       retryCount = 0
       result = ''
-      const input = prompt({prefix: 'You:'})
+      const input = prompt({prefix: YouCharName})
       const message = (await input.run()).trim()
       const llmOptions = {} as any
       if (message) {
@@ -292,6 +302,18 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
       if (!quit) {
         // if (message) {input.write(colors.yellow(aiName+ ': '))}
+        const aiPreferredLanguage = options.aiPreferredLanguage
+        const userPreferredLanguage = options.userPreferredLanguage
+        const text = message.trim()
+        if (aiPreferredLanguage && text) {
+          const translated = await translate(text, aiPreferredLanguage, userPreferredLanguage, runtime)
+          if (translated) {
+            llmOptions.message = translated.translated
+            if (!isSilence) {logUpdate.clear(options.consoleClear)}
+            input.write(YouCharName + translated.target + translated.translated + '\n')
+          }
+        }
+
         try {
           result = await runtime.$interact(llmOptions)
         } catch(error: any) {
@@ -309,13 +331,13 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
           if (!isString) {
             result = ux.colorizeJson(result, {pretty: true, theme: options.theme?.json})
           }
-          let str = colors.yellow(aiName+ ': ') + result.replace(endWithSpacesRegEx, '') + '\n'
+          let str = colors.yellow(aiName+ ': ') + result.trimEnd() + '\n'
           if (isString) {
             const userPreferredLanguage = options.userPreferredLanguage
             if (userPreferredLanguage && result) {
-              const translated = await trans(result, userPreferredLanguage, runtime)
+              const translated = await trans(result, userPreferredLanguage, userPreferredLanguage, runtime)
               if (translated) {
-                str += (translated.replace(startWithSpacesRegEx, '') + '\n')
+                str += colors.yellow(aiName+ ':') + (translated + '\n')
               }
             }
           }
@@ -329,33 +351,69 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   } else {
     const userPreferredLanguage = options.userPreferredLanguage
     if (userPreferredLanguage && result) {
-      const translated = await trans(result, userPreferredLanguage, runtime)
-      if (translated) {
-        result += translated
+      let text = result
+      if (typeof text !== 'string' && text.content) {
+        text = text.content
+      }
+      if (typeof text === 'string') {
+        text = text.trim()
+        if (text) {
+          result = text
+          const translated = await trans(text, userPreferredLanguage, userPreferredLanguage, runtime)
+          if (translated) {
+            result += '\n' + translated
+          }
+        }
       }
     }
   }
   return result
 }
 
-async function trans(content: string|Record<string, any>, userPreferredLanguage: string, runtime: AIScriptEx) {
+async function translate(content: string|Record<string, any>, preferredLanguage: string, userPreferredLanguage: string|undefined, runtime: AIScriptEx) {
   if (content && typeof content !== 'string') {
     content = content.content as string
   }
-  const sep = '\n━━━━━━━━━━━━━\n'
 
-  if (userPreferredLanguage && typeof content === 'string') {
-    const target = getLanguageFromIso6391(userPreferredLanguage)
+  if (preferredLanguage && typeof content === 'string') {
+    let target = getLanguageFromIso6391(preferredLanguage)
     if (target) {
-      const langInfo = detectTextLangEx(content.slice(0, 140))
-      if (langInfo && langInfo.iso6391 !== userPreferredLanguage) {
-        const _translated = await runtime.$exec({id: 'translator', args: {lang: langInfo.name, content, target }})
-        if (_translated && typeof _translated === 'string') {
-          return sep + '【'+target+'】:: ' + _translated
+      const text = content.slice(0, 140)
+      const langInfo = detectTextLangEx(text)
+      if (langInfo && langInfo.iso6391 !== preferredLanguage) {
+        let translated = await runtime.$exec({id: 'translator', args: {lang: langInfo.name, content, target }})
+        if (translated && typeof translated === 'string') {
+          translated = translated.trim()
+          if (translated) {
+            if (userPreferredLanguage && userPreferredLanguage !== 'en') {
+              userPreferredLanguage = getLanguageFromIso6391(userPreferredLanguage)!
+              if (userPreferredLanguage) {
+                let _transTarget = await runtime.$exec({id: 'translator', args: {lang: 'English', content: target + ' translated automatically', target: userPreferredLanguage}})
+                if (_transTarget && typeof _transTarget === 'string') {
+                  _transTarget = _transTarget.trim()
+                  target = _transTarget
+                }
+              }
+            }
+            target = '【' + target + '】'
+            return {translated, target}
+          }
         }
       }
     }
   }
+}
+
+async function trans(content: string|Record<string, any>, preferredLanguage: string, userPreferredLanguage: string, runtime: AIScriptEx) {
+  const translated = await translate(content, preferredLanguage, userPreferredLanguage, runtime)
+  if (translated) {
+    return formatTranslated(translated.translated, translated.target)
+  }
+}
+
+function formatTranslated(translated: string, target: string, sep: string = '\n━━━━━━━━━━━━━\n') {
+  // return sep + target +':: ' + translated + '\n'
+  return target + translated + '\n'
 }
 
 export function getFrame(arr, i) {
