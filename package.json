@@ -16,7 +16,7 @@
     "@isdk/ai-tool-llm": "workspace:*",
     "@isdk/ai-tool-llm-llamacpp": "workspace:*",
     "@isdk/ai-tool-prompt": "workspace:*",
-    "@isdk/detect-text-language": "^0.1.0",
+    "@isdk/detect-text-language": "^0.1.1",
     "@oclif/core": "^4",
     "@offline-ai/cli-common": "workspace:*",
     "ansi-colors": "^4.1.3",
