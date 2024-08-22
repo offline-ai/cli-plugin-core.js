@@ -138,7 +138,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   }
 
   let quit = false
-  const runtime = await script.getRuntime(false)
+  const runtime = await script.getRuntime(false) as AIScriptEx
 
   const saveChatHistory = async () => {
     if (chatsFilename) {
@@ -202,7 +202,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     }
   }
 
-  let result = runtime.result
+  let result = runtime.LatestResult
 
   if (interactive) {
     runtime.$ready(true)
