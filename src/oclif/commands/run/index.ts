@@ -61,6 +61,7 @@ export default class RunScript extends AICommand {
     if (!userConfig.logLevel) {
       userConfig.logLevel = userConfig.interactive ? 'error' : 'warn'
     }
+    userConfig.ThisCmd = this
 
     try {
       await this.config.runHook('config:load', {id: 'run', userConfig})

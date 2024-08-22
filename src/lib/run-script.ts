@@ -37,6 +37,7 @@ interface IRunScriptOptions {
   theme?: any,
   consoleClear?: boolean,
   userPreferredLanguage?: string
+  ThisCmd?: any
 }
 
 function logUpdate(...text: string[]) {
@@ -143,6 +144,19 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   let quit = false
   const runtime = await script.getRuntime(false) as AIScriptEx
+  runtime.on('error', (error: any) => {
+    if (error.name !== 'AbortError') {
+      console.error(error)
+      const cause = error.cause
+      if (cause?.code === 'ECONNREFUSED' && options.apiUrl) {
+        const url = new URL(options.apiUrl)
+        if (url.port == cause.port) {
+          console.error(`Are you sure the brain(LLM) server is running on ${options.apiUrl}?`)
+        }
+      }
+      process.exit(1)
+    }
+  })
 
   const saveChatHistory = async () => {
     if (chatsFilename) {
