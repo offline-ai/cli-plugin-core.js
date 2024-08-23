@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.3.0...v0.4.0) (2024-08-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* following the newest spec
+
+### rafactor
+
+* following the newest spec ([f02b519](https://github.com/offline-ai/cli-plugin-core.js/commit/f02b51972816aea275097692268c0c3138f923e6))
+
+
+### Features
+
+* add "userPreferredLanguage" option to translate the ai string result automatically ([6975c33](https://github.com/offline-ai/cli-plugin-core.js/commit/6975c33b1accbc2d4f17378291b524b3e050c60c))
+* add aiPreferredLanguage and streamEcho supports ([8cbdadb](https://github.com/offline-ai/cli-plugin-core.js/commit/8cbdadb4418f7f597d35117accfd4793a62350b8))
+* add USER_ENV to script env ([d0dcf37](https://github.com/offline-ai/cli-plugin-core.js/commit/d0dcf37416acc9b8d419971bfcd38c5ec75720ca))
+
+
+### Bug Fixes
+
+* should hint to startup the llm server first ([b756dfd](https://github.com/offline-ai/cli-plugin-core.js/commit/b756dfdedfaa201500fdd2fc205c130451ec0a5d))
+* should translate the input data automatically if aiPreferredLanguage exists ([4790831](https://github.com/offline-ai/cli-plugin-core.js/commit/479083111d77f768d7cf752b863d7c0974dbd33f))
+
+
+### Refactor
+
+* use once instead of on for beforeExit and SIGINT ([bf61680](https://github.com/offline-ai/cli-plugin-core.js/commit/bf6168047c94f0a2e4d9171b0485ad64063f0107))
+* use once instead of on ofr beforeExit and SIGINT ([45130a9](https://github.com/offline-ai/cli-plugin-core.js/commit/45130a92f8989d2763e0d9a34c7239d5beb591df))
+
 ## [0.3.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.2.0...v0.3.0) (2024-08-18)
 
 
