@@ -13,12 +13,12 @@ function save() {
   }
 }
 
-process.on('beforeExit', function () {
+process.once('beforeExit', function () {
   save()
 });
 
 // catch ctrl+c event and exit normally
-process.on('SIGINT', function () {
+process.once('SIGINT', function () {
   save()
 });
 
