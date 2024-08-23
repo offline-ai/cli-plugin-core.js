@@ -91,7 +91,7 @@ function renameOldFile(filename: string, backupChat?: boolean) {
 export async function runScript(filename: string, options: IRunScriptOptions) {
   // initTools(options)
 
-  const { logLevel: level, interactive, stream } = options
+  const { logLevel: level, interactive, stream, userPreferredLanguage, aiPreferredLanguage } = options
 
   if (options.consoleClear === undefined) {
     options.consoleClear = interactive
@@ -101,7 +101,11 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   const scriptBasename = path.basename(filename, scriptExtName)
 
   if (Array.isArray(options.agentDirs)) {
-    AIScriptEx.searchPaths = options.agentDirs
+    if (AIScriptEx.searchPaths) {
+      AIScriptEx.searchPaths.push(...options.agentDirs)
+    } else {
+      AIScriptEx.searchPaths = options.agentDirs
+    }
   }
 
   let script
@@ -224,6 +228,21 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   let lastError: any
   try {
+    if (aiPreferredLanguage && options.data) {
+      const _data = options.data
+      const translated = await translate(_data, aiPreferredLanguage, userPreferredLanguage, runtime)
+      if (translated) {
+        if (_data.content) {
+          _data.content = translated.translated
+        } else {
+          options.data = translated.translated
+        }
+        if (!isSilence) {
+          logUpdate.clear(options.consoleClear)
+          options.ThisCmd.log(translated.target +'Input:'+ translated.translated)
+        }
+      }
+    }
     await runtime.run(options.data)
   } catch(error: any) {
     if (error.name !== 'AbortError') {throw error}
@@ -305,8 +324,6 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
       if (!quit) {
         // if (message) {input.write(colors.yellow(aiName+ ': '))}
-        const aiPreferredLanguage = options.aiPreferredLanguage
-        const userPreferredLanguage = options.userPreferredLanguage
         const text = message.trim()
         if (aiPreferredLanguage && text) {
           const translated = await translate(text, aiPreferredLanguage, userPreferredLanguage, runtime)
@@ -336,7 +353,6 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
           }
           let str = colors.yellow(aiName+ ': ') + result.trimEnd() + '\n'
           if (isString) {
-            const userPreferredLanguage = options.userPreferredLanguage
             if (userPreferredLanguage && result) {
               const translated = await trans(result, userPreferredLanguage, userPreferredLanguage, runtime)
               if (translated) {
@@ -352,7 +368,6 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
     } while (!quit)
   } else {
-    const userPreferredLanguage = options.userPreferredLanguage
     if (userPreferredLanguage && result) {
       let text = result
       if (typeof text !== 'string' && text.content) {
@@ -397,6 +412,8 @@ async function translate(content: string|Record<string, any>, preferredLanguage:
                   target = _transTarget
                 }
               }
+            } else {
+              target += ' translated automatically'
             }
             target = '【' + target + '】'
             return {translated, target}
