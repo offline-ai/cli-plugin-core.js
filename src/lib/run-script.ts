@@ -106,7 +106,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   let script
   const aborter = new AbortController()
-  process.on('SIGINT', () => {
+  process.once('SIGINT', () => {
     aborter.abort()}
   )
 
@@ -168,15 +168,18 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   }
 
   const interrupted = async () => {
+    quit = true
     if (runtime.isToolAborted()) {
       await saveChatHistory()
-      process.exit(0)
     } else {
       runtime.abortTool()
     }
+    await wait(100)
+    console.log('quit for interrupted.')
+    process.exit(0)
   }
-  process.on('SIGINT', interrupted)
-  process.on('beforeExit', saveChatHistory)
+  process.once('SIGINT', interrupted)
+  process.once('beforeExit', saveChatHistory)
 
   let llmLastContent = ''
   let retryCount = 0
@@ -197,7 +200,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         retryCount = count
         s += colors.blue(`<续:${count}>`)
       }
-      if (options.streamEcho === 'line' && (s).includes('\n')) {
+      if (options.streamEcho === 'line' && s.includes('\n') && llmLastContent.length >= 256) {
         // logUpdate.clear(options.consoleClear)
         llmLastContent = ''
       }
