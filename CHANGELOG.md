@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.1](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.5.0...v0.5.1) (2024-08-24)
+
+
+### Refactor
+
+* use toDateTime instead of deprecated luxon ([3f87f75](https://github.com/offline-ai/cli-plugin-core.js/commit/3f87f75315ef2d5f97592076102f3054af8f1330))
+
 ## [0.5.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.4.0...v0.5.0) (2024-08-24)
 
 
