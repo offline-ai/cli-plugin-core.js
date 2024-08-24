@@ -77,8 +77,7 @@ FLAGS
   -t, --inputs=<value>                 the input histories folder for interactive mode to record
   -u, --api=<value>                    the api URL
       --[no-]banner                    show banner
-      --[no-]consoleClear              Whether console clear after stream output, default to true in interactive, false
-                                       to non-interactive
+      --[no-]consoleClear              Whether console clear after stream echo output, default to true
       --no-chats                       disable chat histories, defaults to false
       --no-inputs                      disable input histories, defaults to false
 
