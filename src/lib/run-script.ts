@@ -94,7 +94,8 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   const { logLevel: level, interactive, stream, userPreferredLanguage, aiPreferredLanguage } = options
 
   if (options.consoleClear === undefined) {
-    options.consoleClear = interactive
+    // options.consoleClear = interactive
+    options.consoleClear = true
   }
 
   const scriptExtName = getMultiLevelExtname(filename, 2)
