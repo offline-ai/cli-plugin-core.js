@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.4.0...v0.5.0) (2024-08-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* always clear the stream echo output if no config
+
+### Bug Fixes
+
+* translate should pass max_tokens to avoid this config too small ([5982f3f](https://github.com/offline-ai/cli-plugin-core.js/commit/5982f3f3d07f346fd142ddf8097a07f662e6715b))
+
+
+### Refactor
+
+* always clear the stream echo output if no config ([52ce245](https://github.com/offline-ai/cli-plugin-core.js/commit/52ce24582688128be705a210362a099f60eb6e8d))
+
 ## [0.4.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.3.0...v0.4.0) (2024-08-23)
 
 
