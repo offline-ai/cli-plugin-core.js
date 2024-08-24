@@ -399,14 +399,14 @@ async function translate(content: string|Record<string, any>, preferredLanguage:
       const text = content.slice(0, 140)
       const langInfo = detectTextLangEx(text)
       if (langInfo && langInfo.iso6391 !== preferredLanguage) {
-        let translated = await runtime.$exec({id: 'translator', args: {lang: langInfo.name, content, target }})
+        let translated = await runtime.$exec({id: 'translator', args: {lang: langInfo.name, content, target, max_tokens: 2048 }})
         if (translated && typeof translated === 'string') {
           translated = translated.trim()
           if (translated) {
             if (userPreferredLanguage && userPreferredLanguage !== 'en') {
               userPreferredLanguage = getLanguageFromIso6391(userPreferredLanguage)!
               if (userPreferredLanguage) {
-                let _transTarget = await runtime.$exec({id: 'translator', args: {lang: 'English', content: target + ' translated automatically', target: userPreferredLanguage}})
+                let _transTarget = await runtime.$exec({id: 'translator', args: {lang: 'English', content: target + ' translated automatically', target: userPreferredLanguage, max_tokens: 2048}})
                 if (_transTarget && typeof _transTarget === 'string') {
                   _transTarget = _transTarget.trim()
                   target = _transTarget
