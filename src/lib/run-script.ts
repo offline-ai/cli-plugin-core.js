@@ -2,12 +2,11 @@ import { ux } from '@oclif/core'
 import util from 'util'
 import fs from 'fs'
 import path from 'path'
-import { DateTime } from 'luxon'
 import colors from 'ansi-colors'
 // import cliSpinners from 'cli-spinners'
 import _logUpdate from 'log-update'
 import { get as getByPath } from 'lodash-es'
-import { ConfigFile, getMultiLevelExtname, parseJsJson, wait } from '@isdk/ai-tool'
+import { ConfigFile, formatISO, getMultiLevelExtname, parseJsJson, toDateTime, wait } from '@isdk/ai-tool'
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
@@ -74,12 +73,12 @@ function renameOldFile(filename: string, backupChat?: boolean) {
   if (fs.existsSync(filename)) {
     const content = ConfigFile.loadSync(filename)
     let createdAtStr = findCreatedAt(content)
-    const createdAt = createdAtStr ? DateTime.fromISO(createdAtStr) : DateTime.now()
+    const createdAt = createdAtStr ? toDateTime(createdAtStr) as Date : new Date()
     const dirname = path.dirname(filename)
     const extName = path.extname(filename)
     const basename = path.basename(filename, extName)
     // rename to history-2023-01-01T00_00_00_000Z.yaml
-    createdAtStr = createdAt.toISO().replace(/[:.]/g, '_')
+    createdAtStr = formatISO(createdAt).replace(/[:.]/g, '_')
     const newFileName = path.join(dirname, `${basename}-${createdAtStr}${extName}`)
     if (backupChat) {
       fs.cpSync(filename, newFileName)

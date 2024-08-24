@@ -23,8 +23,7 @@
     "color-json": "^3.0.5",
     "enquirer": "^2.4.1",
     "lodash-es": "^4.17.21",
-    "log-update": "^6.1.0",
-    "luxon": "^3.5.0"
+    "log-update": "^6.1.0"
   },
   "devDependencies": {
     "@oclif/prettier-config": "^0.2.1",
