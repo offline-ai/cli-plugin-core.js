@@ -212,11 +212,12 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       // if (llmLastContent.length > 100) {
       //   llmLastContent = llmLastContent.slice(llmLastContent.length-100)
       // }
+      if (llmResult.stop) {
+        llmLastContent = ''
+      }
+
       if (!isSilence && llmLastContent) {
         if (options.consoleClear) {
-          if (llmResult.stop) {
-            llmLastContent = ''
-          }
           logUpdate(llmLastContent)
         } else {
           process.stdout.write(s)
