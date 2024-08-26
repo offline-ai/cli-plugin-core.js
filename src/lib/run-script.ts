@@ -1,3 +1,4 @@
+import enquier from 'enquirer'
 import { ux } from '@oclif/core'
 import util from 'util'
 import fs from 'fs'
@@ -17,10 +18,23 @@ import { expandPath } from '@offline-ai/cli-common'
 // const startWithSpacesRegEx = /^[\s\n\r]+/
 const YouCharName = 'You:'
 
+const consoleInput = enquier.prompt
 class AIScriptEx extends AIScriptServer {
   $detectLang(text: string) {
     return detectLang(text)
   }
+  async $consoleInput(params: any) {
+    const defaults = this.getJSON(true)
+    params = {...defaults, ...params}
+    params.type = params.inputType || 'input'
+    delete params.inputType
+    params.message = params.question
+    delete params.question
+    params.name = 'answer'
+    return await consoleInput(params)
+  }
+
+  colors = colors
 }
 
 interface IRunScriptOptions {
