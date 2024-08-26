@@ -393,6 +393,7 @@ async function translate(content: string|Record<string, any>, preferredLanguage:
   if (content && typeof content !== 'string') {
     content = content.content as string
   }
+  const cache = translate.cache
 
   if (preferredLanguage && typeof content === 'string') {
     let target = getLanguageFromIso6391(preferredLanguage)
@@ -407,10 +408,15 @@ async function translate(content: string|Record<string, any>, preferredLanguage:
             if (userPreferredLanguage && userPreferredLanguage !== 'en') {
               userPreferredLanguage = getLanguageFromIso6391(userPreferredLanguage)!
               if (userPreferredLanguage) {
-                let _transTarget = await runtime.$exec({id: 'translator', args: {lang: 'English', content: target + ' translated automatically', target: userPreferredLanguage, max_tokens: 2048}})
-                if (_transTarget && typeof _transTarget === 'string') {
-                  _transTarget = _transTarget.trim()
-                  target = _transTarget
+                if (!cache[target]) {
+                  let _transTarget = await runtime.$exec({id: 'translator', args: {lang: 'English', content: target + ' translated automatically', target: userPreferredLanguage, max_tokens: 2048}})
+                  if (_transTarget && typeof _transTarget === 'string') {
+                    _transTarget = _transTarget.trim()
+                    cache[target] = _transTarget
+                    target = _transTarget
+                  }
+                } else {
+                  target = cache[target]
                 }
               }
             } else {
@@ -424,6 +430,7 @@ async function translate(content: string|Record<string, any>, preferredLanguage:
     }
   }
 }
+translate.cache = {} as any
 
 async function trans(content: string|Record<string, any>, preferredLanguage: string, userPreferredLanguage: string, runtime: AIScriptEx) {
   const translated = await translate(content, preferredLanguage, userPreferredLanguage, runtime)
