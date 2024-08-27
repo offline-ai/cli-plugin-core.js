@@ -6,18 +6,22 @@ import { AICommand, AICommonFlags, expandPath, showBanner } from '@offline-ai/cl
 
 import {runScript} from '../../../lib/run-script.js'
 
+
+function parseJsonInput(input: string) {
+  try {
+    return parseJsJson(input)
+  } catch(e) {
+    return input
+  }
+}
 export default class RunScript extends AICommand {
   static args = {
+    file: Args.string({
+      description: 'the script file path, or the json data when `-f` switch is set',
+    }),
     data: Args.string({
       description: 'the json data which will be passed to the ai-agent script',
-      parse: (input: string) => {
-        try {
-          return parseJsJson(input)
-        } catch(e) {
-          return input
-        }
-      },
-    })
+    }),
   }
 
   static summary = '💻 Run ai-agent script file.'
@@ -43,9 +47,17 @@ export default class RunScript extends AICommand {
 
   async run(): Promise<any> {
     const opts = await this.parse(RunScript as any)
-    const {flags} = opts
+    const {flags, args} = opts
     // console.log('🚀 ~ RunScript ~ run ~ flags:', flags)
     const isJson = this.jsonEnabled()
+
+    if (!flags.script) {
+      flags.script = args.file
+    } else {
+      args.data = args.file
+    }
+
+    args.data = parseJsonInput(args.data)
     const userConfig = await this.loadConfig(flags.config, {...opts, skipLoadHook: true})
     logLevel.json = isJson
     const hasBanner = userConfig.banner ?? userConfig.interactive

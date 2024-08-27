@@ -30,11 +30,11 @@ class AIScriptEx extends AIScriptServer {
     delete params.inputType
     params.message = params.question
     delete params.question
+    params.initial = params.value
+    delete params.value
     params.name = 'answer'
     return await consoleInput(params)
   }
-
-  colors = colors
 }
 
 interface IRunScriptOptions {
