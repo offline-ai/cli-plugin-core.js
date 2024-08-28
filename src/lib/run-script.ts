@@ -33,6 +33,8 @@ class AIScriptEx extends AIScriptServer {
     params.initial = params.value
     delete params.value
     params.name = 'answer'
+    delete params.input
+    delete params.output
     return await consoleInput(params)
   }
 }
