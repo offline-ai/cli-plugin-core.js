@@ -36,25 +36,27 @@ npm install -g @offline-ai/cli
 # Commands
 
 <!-- commands -->
-* [`ai run [DATA]`](#ai-run-data)
+* [`ai run [FILE] [DATA]`](#ai-run-file-data)
 
-## `ai run [DATA]`
+## `ai run [FILE] [DATA]`
 
 💻 Run ai-agent script file.
 
 ```
 USAGE
-  $ ai run [DATA] [--json] [-c <value>] [--banner] [-u <value>] [-s <value>...] [-l
+  $ ai run [FILE] [DATA] [--json] [-c <value>] [--banner] [-u <value>] [-s <value>...] [-l
     silence|fatal|error|warn|info|debug|trace] [-h <value>] [-n] [-k] [-t <value> -i] [--no-chats] [--no-inputs ] [-m]
-    [-f <value>] [-d <value>] [-a <value>] [-b <value>] [-p <value>...] [-L <value>] [-A <value>] [-e true|false|line]
-    [--consoleClear]
+    [-f <value>] [-d <value>] [-D <value>...] [-a <value>] [-b <value>] [-p <value>...] [-L <value>] [-A <value>] [-e
+    true|false|line] [--consoleClear]
 
 ARGUMENTS
+  FILE  the script file path, or the json data when `-f` switch is set
   DATA  the json data which will be passed to the ai-agent script
 
 FLAGS
   -A, --aiPreferredLanguage=<value>    the ISO 639-1 code for the AI preferred language to translate the user input
                                        automatically, eg, en, etc.
+  -D, --data=<value>...                the data which will be passed to the ai-agent script: key1=value1 key2=value2
   -L, --userPreferredLanguage=<value>  the ISO 639-1 code for the user preferred language to translate the AI result
                                        automatically, eg, en, zh, ja, ko, etc.
   -a, --arguments=<value>              the json data which will be passed to the ai-agent script
