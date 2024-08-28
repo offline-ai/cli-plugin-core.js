@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.6.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.5.3...v0.6.0) (2024-08-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* consoleInput use value option instead of initial
+
+### Features
+
+* add $consoleInput and colors ([f923871](https://github.com/offline-ai/cli-plugin-core.js/commit/f9238712b2446fcae8addab45a17233d6638610f))
+* **trans:** cache the target lang ([da13aac](https://github.com/offline-ai/cli-plugin-core.js/commit/da13aac6666ed64e7f5792ad757c1536e8075efe))
+
+
+### Bug Fixes
+
+* not clear stream echo var after stop ([a6f2059](https://github.com/offline-ai/cli-plugin-core.js/commit/a6f205964deea6b34ba6c8074baf5020d87db5c0))
+* params confict with consoleInput ([93b1682](https://github.com/offline-ai/cli-plugin-core.js/commit/93b16822e77ee8773d0eb52a4b4181a14f961697))
+
+
+### Refactor
+
+* consoleInput use value option instead of initial ([e5de623](https://github.com/offline-ai/cli-plugin-core.js/commit/e5de623516410fd96db75dc1b95a05f1306059dd))
+
 ## [0.5.3](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.5.2...v0.5.3) (2024-08-25)
 
 ## [0.5.2](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.5.1...v0.5.2) (2024-08-24)
