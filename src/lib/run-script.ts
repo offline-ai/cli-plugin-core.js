@@ -138,6 +138,8 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         USER_ENV: options,
         FUNC_SCOPE: {
           expandPath: function(path: string) {
+            // for formatting
+            if (path && typeof path === 'object') {return (p: string)=>expandPath(p, options)}
             return expandPath(path, options)
           },
         }

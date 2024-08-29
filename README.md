@@ -97,7 +97,7 @@ EXAMPLES
   │[info]:Start Script: ...
 ```
 
-_See code: [src/commands/run/index.ts](https://github.com/offline-ai/cli-plugin-core.js/blob/v0.5.3/src/commands/run/index.ts)_
+_See code: [src/commands/run/index.ts](https://github.com/offline-ai/cli-plugin-core.js/blob/v0.6.0/src/commands/run/index.ts)_
 <!-- commandsstop -->
 
 # Credit
