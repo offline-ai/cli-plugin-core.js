@@ -7,7 +7,7 @@ import colors from 'ansi-colors'
 // import cliSpinners from 'cli-spinners'
 import _logUpdate from 'log-update'
 import { get as getByPath } from 'lodash-es'
-import { ConfigFile, formatISO, getMultiLevelExtname, parseJsJson, toDateTime, wait } from '@isdk/ai-tool'
+import { ConfigFile, countRegexMatches, formatISO, getMultiLevelExtname, parseJsJson, toDateTime, wait } from '@isdk/ai-tool'
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
@@ -23,6 +23,11 @@ class AIScriptEx extends AIScriptServer {
   $detectLang(text: string) {
     return detectLang(text)
   }
+
+  $translate(params: any) {
+    return this.$exec({id: 'translator', args: { max_tokens: 2048, ...params }})
+  }
+
   async $consoleInput(params: any) {
     const defaults = this.getJSON(true)
     params = {...defaults, ...params}
@@ -222,16 +227,17 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         retryCount = count
         s += colors.blue(`<续:${count}>`)
       }
-      if (options.streamEcho === 'line' && s.includes('\n') && llmLastContent.length >= 256) {
+      llmLastContent += s
+      if (options.streamEcho === 'line' && (llmLastContent.length >= 256 || countRegexMatches(llmLastContent, /[\n\r]/) > 3)) {
         // logUpdate.clear(options.consoleClear)
         llmLastContent = ''
       }
-      llmLastContent += s
       // if (llmLastContent.length > 100) {
       //   llmLastContent = llmLastContent.slice(llmLastContent.length-100)
       // }
       if (llmResult.stop) {
         llmLastContent = ''
+        logUpdate(llmLastContent)
       }
 
       if (!isSilence && llmLastContent) {
