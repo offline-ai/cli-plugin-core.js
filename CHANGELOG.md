@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.6.1](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.6.0...v0.6.1) (2024-08-31)
+
+
+### Bug Fixes
+
+* should clean after stop ([ea98cd7](https://github.com/offline-ai/cli-plugin-core.js/commit/ea98cd7977fe59ef365cbde3b3970004b8d137cb))
+* workaround: expandPath error in formatting ([f9fe346](https://github.com/offline-ai/cli-plugin-core.js/commit/f9fe346dd82415433c8860f117d6d23675d6646e))
+
 ## [0.6.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.5.3...v0.6.0) (2024-08-28)
 
 
