@@ -7,7 +7,7 @@ import colors from 'ansi-colors'
 // import cliSpinners from 'cli-spinners'
 import _logUpdate from 'log-update'
 import { get as getByPath } from 'lodash-es'
-import { ConfigFile, countRegexMatches, formatISO, getMultiLevelExtname, parseJsJson, toDateTime, wait } from '@isdk/ai-tool'
+import { ConfigFile, countRegexMatches, formatISO, getMultiLevelExtname, parseJsJson, readFilenamesRecursiveSync, toDateTime, wait } from '@isdk/ai-tool'
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
@@ -28,13 +28,40 @@ class AIScriptEx extends AIScriptServer {
     return this.$exec({id: 'translator', args: { max_tokens: 2048, ...params }})
   }
 
+  $getLanguageFromIso6391(iso6391: string|{iso6391: string}) {
+    if (iso6391 && typeof iso6391 === 'object') {
+      iso6391 = iso6391.iso6391
+    }
+    if (iso6391?.length > 2) {iso6391 = iso6391.slice(0, 2)}
+    return getLanguageFromIso6391(iso6391)
+  }
+
+  $listFilenames(params: {dir: string|string[], recursive?: boolean, extname?: string[]|string, aborter?: AbortController}) {
+    const options: any = {}
+    if (params) {
+      if (params.extname) {
+        const extname = Array.isArray(params.extname) ? params.extname : [params.extname]
+        options.isFileMatched = function(filepath: string) {
+          return extname.includes(filepath)
+        }
+      }
+      if (params.recursive === false) {
+        options.level = 1
+      }
+      if (params.aborter instanceof AbortController) {
+        options.signal = params.aborter.signal
+      }
+    }
+    return readFilenamesRecursiveSync(params.dir, options)
+  }
+
   async $consoleInput(params: any) {
     const defaults = this.getJSON(true)
     params = {...defaults, ...params}
     params.type = params.inputType || 'input'
     delete params.inputType
-    params.message = params.question
-    delete params.question
+    params.message = params.content
+    delete params.content
     params.initial = params.value
     delete params.value
     params.name = 'answer'
