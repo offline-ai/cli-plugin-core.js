@@ -239,7 +239,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   let retryCount = 0
 
   if (stream) {
-    runtime.on('llmStream', async function(llmResult, content: string, count: number) {
+    runtime.on('llmStream', async function(llmResult, content: string, count: number, id?: string) {
       const runtime = this.target as AIScriptEx
       let s = llmResult.content
 
@@ -255,7 +255,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         s += colors.blue(`<续:${count}>`)
       }
       llmLastContent += s
-      if (options.streamEcho === 'line' && (llmLastContent.length >= 256 || countRegexMatches(llmLastContent, /[\n\r]/) > 3)) {
+      if (options.streamEcho === 'line' && (llmLastContent.length >= 128 || countRegexMatches(llmLastContent, /[\n\r]/) > 2)) {
         // logUpdate.clear(options.consoleClear)
         llmLastContent = ''
       }
@@ -269,7 +269,8 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
       if (!isSilence && llmLastContent) {
         if (options.consoleClear) {
-          logUpdate(llmLastContent)
+          if (!id && runtime.id) {id = runtime.id}
+          logUpdate(id+': '+llmLastContent)
         } else {
           process.stdout.write(s)
           logUpdate.dirt = true
