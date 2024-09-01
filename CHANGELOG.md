@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.7.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.6.1...v0.7.0) (2024-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* show script id when stream echo
+* $consoleInput usse content instead of question
+
+### Features
+
+* add $isDir ([13b7838](https://github.com/offline-ai/cli-plugin-core.js/commit/13b78386b2ee037a9607b82fa701e3fea49d4706))
+
+
+### Refactor
+
+* $consoleInput usse content instead of question ([951b971](https://github.com/offline-ai/cli-plugin-core.js/commit/951b971dc5b0670f21256ba5c8132e0960cdf44e))
+* show script id when stream echo ([ac70662](https://github.com/offline-ai/cli-plugin-core.js/commit/ac706621058082e36c0751e876a6abc055ab78c7))
+
 ## [0.6.1](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.6.0...v0.6.1) (2024-08-31)
 
 
