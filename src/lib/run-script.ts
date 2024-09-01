@@ -36,13 +36,21 @@ class AIScriptEx extends AIScriptServer {
     return getLanguageFromIso6391(iso6391)
   }
 
+  $isDir(dir: string|{content: string}) {
+    if (dir && typeof dir === 'object') {
+      dir = dir.content
+    }
+    const stat = fs.statSync(dir, { throwIfNoEntry: false })
+    return stat?.isDirectory()
+  }
+
   $listFilenames(params: {dir: string|string[], recursive?: boolean, extname?: string[]|string, aborter?: AbortController}) {
     const options: any = {}
     if (params) {
       if (params.extname) {
         const extname = Array.isArray(params.extname) ? params.extname : [params.extname]
         options.isFileMatched = function(filepath: string) {
-          return extname.includes(filepath)
+          return extname.includes(getMultiLevelExtname(filepath, 2))
         }
       }
       if (params.recursive === false) {
@@ -52,7 +60,13 @@ class AIScriptEx extends AIScriptServer {
         options.signal = params.aborter.signal
       }
     }
-    return readFilenamesRecursiveSync(params.dir, options)
+    const dir = params.dir
+    let result = readFilenamesRecursiveSync(dir, options)
+    const parentDir = params.dir as string
+    if (typeof parentDir === 'string') {
+      result = result.map(filepath => path.relative(path.resolve(parentDir), path.resolve(filepath)))
+    }
+    return result
   }
 
   async $consoleInput(params: any) {
