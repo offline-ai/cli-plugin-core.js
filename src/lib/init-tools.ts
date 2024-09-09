@@ -15,6 +15,7 @@ export const BRAINS_FUNC_NAME = 'llm.brains'
 export async function initTools(this: Hook.Context, userConfig: any, _config: Config) {
   try {
     const promptsFunc = new AIPromptsFunc(AIPromptsName, {dbPath: ':memory:', initDir: userConfig.promptsDir})
+    await promptsFunc.initData()
 
     ServerTools.register(promptsFunc)
     ServerTools.register(llm)
