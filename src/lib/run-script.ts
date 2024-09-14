@@ -102,6 +102,7 @@ interface IRunScriptOptions {
   aiPreferredLanguage?: string
   ThisCmd?: any
   streamEcho?: boolean|string
+  streamEchoChars?: number
 }
 
 function logUpdate(...text: string[]) {
@@ -269,7 +270,12 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         s += colors.blue(`<续:${count}>`)
       }
       llmLastContent += s
-      if (options.streamEcho === 'line' && (llmLastContent.length >= 128 || countRegexMatches(llmLastContent, /[\n\r]/) > 2)) {
+
+      if (options.streamEchoChars && llmLastContent.length > options.streamEchoChars) {
+        llmLastContent = ''
+      }
+
+      if (options.streamEcho === 'line' && countRegexMatches(llmLastContent, /[\n\r]/) > 1) {
         // logUpdate.clear(options.consoleClear)
         llmLastContent = ''
       }
