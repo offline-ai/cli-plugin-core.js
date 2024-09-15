@@ -1,0 +1,18 @@
+---
+version: 0.0.1
+type: instructor
+name: instructor
+parameters:
+  temperature: 0.01
+description: |-
+  Explain a file or dir in the guide.
+input:
+  - file
+  - lang  # the target language
+file: "README.md"
+autoRunLLMIfPromptAvailable: false
+---
+- $if: "this.$isDir(__dirname+this.file)"
+  then:
+    -> guide_lib_select(dir=file) -> $set('file')
+- -> guide_lib_explain_file(file=file, lang=lang, memoized=false)

@@ -1,0 +1,41 @@
+---
+version: 0.1.0
+type: lib
+description: |-
+  This script will wait for user input.
+  Currently the console input is only supported.
+  Browser input TODO.
+tag:
+  - user
+  - input
+  - lib
+input:
+  - inputType # The input type: confirm, select, number, list, input, password
+  - content   # the message to show to the user
+  - value     # the initial(default) value of the input
+output:
+  type: 'object'
+  properties:
+    question: {type: 'string'}
+    answer: {type: ['string', 'boolean', 'number', 'array', 'object']}
+---
+- !fn |-
+  toText(value) {
+    if (value == null) {
+      return 'null';
+    }
+
+    if (typeof this.format === 'function') {
+      return this.format(value);
+    }
+    const t = typeof value;
+    switch (t) {
+      case 'boolean':
+        return value ? 'yes' : 'no';
+    }
+    return value
+  }
+- $set:
+    result: $consoleInput
+# - $print: ?=result
+- $echo: ?=result.answer

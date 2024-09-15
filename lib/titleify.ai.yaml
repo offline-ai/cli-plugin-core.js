@@ -1,0 +1,61 @@
+---
+version: 0.1.2
+type: lib
+description: |-
+  Summarize the content or a text file into a single best title that captures the essence of the document.
+  It takes a filepath as input and outputs a concise title that reflects the main theme or content.
+
+  It can be used in prompt. eg, `Title: @titleify(file=document.md)`
+
+  Or, run it directly:
+
+  ```bash
+  $ai run -f titleify "{file: 'document.md'}"
+  ````
+tag:
+  - titleify
+  - title
+  - summarize
+  - extract
+  - prompt
+  - lib
+input:
+  - content                  # The content to titleify or treat as user input
+  - file                     # The text file path if exists, it will load content from the file
+  - len: {type: "number"}    # the optional max length of the title. It is not precise, just an approximate number.
+  - temperature              # the optional temperature of the LLM.
+output:
+  type: "string"
+len: -1                      # the default max length of the title, -1 means no limit
+temperature: 0.01            # the default temperature of the LLM.
+---
+- $if: "this.file"
+  then:
+    $set:
+      fileContent: "@file({{file}})"
+- system: |-
+    Summarize the content provided by the user into some best titles that captures the essence of the document.
+    {%- if len and len > 0 -%}
+    Keep the title within {{len}} characters.
+    {% endif %}
+    {{fileContent}}
+---
+- $if: "this.content || this.fileContent"
+  then:
+    # API mode
+    - $if: "this.content"
+      then:
+        user: "{{content}}"
+    # get some titles
+    - assistant: "[[titles:max_tokens=len, temperature]]"
+    - ---
+    - user: "Titles:\n{{titles}}\nWhich title is the best title? Why?"
+    # choose the best one
+    - assistant: "[[titleInfo]]"
+    - ---
+    # output the best title
+    - user: "{{titleInfo}}\nExtract and Output ONE title ONLY. DO NOT EXPLAIN."
+    - assistant: "[[title]]"
+  else:
+    # For multi-turn conversation in interactive mode.
+    - assistant: "What's the content you want to titleify?"

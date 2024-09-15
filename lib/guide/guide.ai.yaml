@@ -1,0 +1,62 @@
+---
+version: 0.0.1
+name: "Guide"
+description: |-
+  The AI guide main entry for the PPE examples and lib scripts.
+autoRunLLMIfPromptAvailable: false
+Welcome: |-
+  I am an AI guide instructor, I will guide you to use Programmable Prompt Engine(PPE) scripts.
+IsServerRunning: Please make sure the brain(LLM) server has been started. Are you sure it's running?
+---
+- !fn# |-
+  function lang(iso6391) {
+    return this.languages.find(l => l.value === iso6391)?.name
+  }
+- !fn |-
+  async function toChoices({files}) {
+    let result = files.map(f => ({name: f.title, value: f.filepath}))
+    const target = this.$lang(this.preferLang)
+    if (this.preferLang !== 'en') {
+      for (let i = 0; i < result.length; i++) {
+        const item = result[i]
+        const trans = await this.$translate({content: item.name, target, lang: 'English'})
+        item.name = trans.split('\n')[0].trim()
+      }
+      result.push({name: await this.$translate({content: 'Exit', target, lang: 'English'}), value: 'quit'})
+    } else {
+      result.push({name: 'Exit', value: 'quit'})
+    }
+    return result
+  }
+- $if: "@input(inputType='confirm', content={{Welcome+'\n'+IsServerRunning}}, value=true, format=(answer) => answer ? 'Yes' : 'No')"
+  then:
+    # call support_langs to get the supported languages from LLM and assign it to the languages variable.
+    - $set:
+      languages: "@support_langs"
+    - $set:
+      # call input to get the preferLang from user and assign it to the preferLang variable.
+      preferLang: "@input(inputType='AutoComplete', content='Which language do you prefer?', choices=languages, limit=10)"
+      # `#` prefix means format the template string immediately and assign it to the variable.
+      GiveMeGoodBrain: "\n[Start Guide]An expert should have a good brain(LLM)."
+    - $if: "preferLang !== 'en'"
+      then:
+        # - $set:
+        #   ENV.USER_ENV.userPreferredLanguage: ?=preferLang
+        - $echo: "#I will translate the content to {{preferLang | lang}} automatically.\n"
+        - -> translator(content=content+GiveMeGoodBrain, target=preferLang)
+      else:
+        - -> $echo(content=GiveMeGoodBrain)
+    - -> $print
+    - $set:
+      selected: ''
+    - $while: "selected !== 'quit'"
+      do:
+        # call guide_lib_list to get the catalog from the README.md and assign it to the catalog variable.
+        - -> guide_lib_list(file="README.md") -> $set('catalog', content)
+        # echo the catalog summary as the latest content
+        - $echo: ?=catalog.summary
+        # call translator to translate the content to the preferLang and assign it to the question variable.
+        - -> translator(content=content+"\nPlease select what you want to know:", target=preferLang) -> $set('question')
+        # call user-defined js instruction `toChoices` to get the choices from the catalog and pass it the the `choices` argument of the input.
+        # the input will list the catalog as the choices. The user can select the file to explain.
+        - -> $toChoices(files=catalog.files) -> input(inputType='AutoComplete', content=question, choices=content, limit=10, memoized=false) -> $set('selected') -> guide_lib_explain(file=content, lang=preferLang, memoized=false)
