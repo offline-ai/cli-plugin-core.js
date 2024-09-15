@@ -11,7 +11,7 @@ import { ConfigFile, countRegexMatches, formatISO, getMultiLevelExtname, parseJs
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
-import { expandPath } from '@offline-ai/cli-common'
+import { expandConfig, expandPath } from '@offline-ai/cli-common'
 // import { initTools } from './init-tools.js'
 
 // const endWithSpacesRegEx = /[\s\n\r]+$/
@@ -163,7 +163,8 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   const scriptExtName = getMultiLevelExtname(filename, 2)
   const scriptBasename = path.basename(filename, scriptExtName)
 
-  if (Array.isArray(options.agentDirs)) {
+  if (Array.isArray(options.agentDirs) && options.agentDirs.length) {
+    options.agentDirs = expandConfig(options.agentDirs, options) as any[]
     if (AIScriptEx.searchPaths) {
       AIScriptEx.searchPaths.push(...options.agentDirs)
     } else {
