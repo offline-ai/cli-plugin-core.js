@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.8.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.7.2...v0.8.0) (2024-09-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* add local runtime lib support
+* add runtime lib
+* add streamEchoChars supports
+* follow upstream
+
+### Features
+
+* add runtime lib ([3775454](https://github.com/offline-ai/cli-plugin-core.js/commit/37754546311bf036da0b1bb9ea374c41a8479dfb))
+* add streamEchoChars supports ([f8154ee](https://github.com/offline-ai/cli-plugin-core.js/commit/f8154ee14c73aa3f294c84b214dfc73a554b3559))
+* export the translate ([c18a0a0](https://github.com/offline-ai/cli-plugin-core.js/commit/c18a0a056f0ba38dfe61ae70085e80589342ca9d))
+* expose runtime ([e9eb896](https://github.com/offline-ai/cli-plugin-core.js/commit/e9eb896a914e23828261c0a13dca8c5f6a0def8c))
+
+
+### Bug Fixes
+
+* can not get scriptRootDir ([9854292](https://github.com/offline-ai/cli-plugin-core.js/commit/98542922cd43898a6681c73df820db3e370e9b2f))
+* should expand path for search paths ([6c18c11](https://github.com/offline-ai/cli-plugin-core.js/commit/6c18c11a3c132cff39efa4fcab202345552fcd3e))
+
+
+### Refactor
+
+* add local runtime lib support ([cf6ecf0](https://github.com/offline-ai/cli-plugin-core.js/commit/cf6ecf021e08efe37fe01a977ac0684148cbd149))
+* follow upstream ([3c6d89b](https://github.com/offline-ai/cli-plugin-core.js/commit/3c6d89b94605bfbebfd519ad2b875557609ce5ff))
+
 ## [0.7.2](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.7.1...v0.7.2) (2024-09-02)
 
 ## [0.7.1](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.7.0...v0.7.1) (2024-09-02)
