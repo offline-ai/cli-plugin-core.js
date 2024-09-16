@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'url';
 import enquier from 'enquirer'
 import { ux } from '@oclif/core'
 import util from 'util'
@@ -13,6 +14,11 @@ import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
 import { expandConfig, expandPath } from '@offline-ai/cli-common'
 // import { initTools } from './init-tools.js'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const scriptRootDir = path.join(__dirname, '..', 'lib')
 
 // const endWithSpacesRegEx = /[\s\n\r]+$/
 // const startWithSpacesRegEx = /^[\s\n\r]+/
@@ -103,6 +109,7 @@ interface IRunScriptOptions {
   ThisCmd?: any
   streamEcho?: boolean|string
   streamEchoChars?: number
+  logUpdate?: (...text: string[]) => void
 }
 
 function logUpdate(...text: string[]) {
@@ -162,14 +169,15 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   const scriptExtName = getMultiLevelExtname(filename, 2)
   const scriptBasename = path.basename(filename, scriptExtName)
+  if (!AIScriptEx.searchPaths) {
+    AIScriptEx.searchPaths = [scriptRootDir]
+  } else {
+    AIScriptEx.searchPaths.push(scriptRootDir)
+  }
 
   if (Array.isArray(options.agentDirs) && options.agentDirs.length) {
     options.agentDirs = expandConfig(options.agentDirs, options) as any[]
-    if (AIScriptEx.searchPaths) {
-      AIScriptEx.searchPaths.push(...options.agentDirs)
-    } else {
-      AIScriptEx.searchPaths = options.agentDirs
-    }
+    AIScriptEx.searchPaths.push(...options.agentDirs)
   }
 
   let script
@@ -255,6 +263,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   let retryCount = 0
 
   if (stream) {
+    const mLogUpdate = options.logUpdate ?? logUpdate
     runtime.on('llmStream', async function(llmResult, content: string, count: number, id?: string) {
       const runtime = this.target as AIScriptEx
       let s = llmResult.content
@@ -276,7 +285,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         llmLastContent = ''
       }
 
-      if (options.streamEcho === 'line' && countRegexMatches(llmLastContent, /[\n\r]/) > 1) {
+      if (options.streamEcho === 'line' && countRegexMatches(llmLastContent, /[\n\r]/) >= 1) {
         // logUpdate.clear(options.consoleClear)
         llmLastContent = ''
       }
@@ -285,13 +294,13 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       // }
       if (llmResult.stop) {
         llmLastContent = ''
-        logUpdate(llmLastContent)
+        mLogUpdate(llmLastContent)
       }
 
       if (!isSilence && llmLastContent) {
         if (options.consoleClear) {
           if (!id && runtime.id) {id = runtime.id}
-          logUpdate(id+': '+llmLastContent)
+          mLogUpdate(id+': '+llmLastContent)
         } else {
           process.stdout.write(s)
           logUpdate.dirt = true
