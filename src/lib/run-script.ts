@@ -8,7 +8,17 @@ import colors from 'ansi-colors'
 // import cliSpinners from 'cli-spinners'
 import _logUpdate from 'log-update'
 import { get as getByPath } from 'lodash-es'
-import { ConfigFile, countRegexMatches, formatISO, getMultiLevelExtname, parseJsJson, readFilenamesRecursiveSync, toDateTime, wait } from '@isdk/ai-tool'
+import {
+  ConfigFile,
+  countRegexMatches,
+  formatISO,
+  getMultiLevelExtname,
+  getPackageDir,
+  parseJsJson,
+  readFilenamesRecursiveSync,
+  toDateTime,
+  wait,
+} from '@isdk/ai-tool'
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
@@ -18,7 +28,7 @@ import { expandConfig, expandPath } from '@offline-ai/cli-common'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const scriptRootDir = path.join(__dirname, '..', 'lib')
+const scriptRootDir = path.join(getPackageDir(__dirname), 'lib')
 
 // const endWithSpacesRegEx = /[\s\n\r]+$/
 // const startWithSpacesRegEx = /^[\s\n\r]+/
@@ -301,7 +311,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       if (!isSilence && llmLastContent) {
         if (options.consoleClear) {
           if (!id && runtime.id) {id = runtime.id}
-          mLogUpdate(id+': '+llmLastContent)
+          mLogUpdate((id ? '['+formatWordString(id)+']: ' : '')+llmLastContent)
         } else {
           process.stdout.write(s)
           logUpdate.dirt = true
@@ -472,7 +482,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   return result
 }
 
-async function translate(content: string|Record<string, any>, preferredLanguage: string, userPreferredLanguage: string|undefined, runtime: AIScriptEx) {
+export async function translate(content: string|Record<string, any>, preferredLanguage: string, userPreferredLanguage: string|undefined, runtime: AIScriptEx) {
   if (content && typeof content !== 'string') {
     content = content.content as string
   }
@@ -552,4 +562,32 @@ export function parseCommandString(commandString: string): { command: string, ar
   const args: any[] = argsString ? parseJsJson(argsString) : []
 
   return { command, args };
+}
+
+/**
+ * Formats a given string by capitalizing the first letter of each word and replacing underscores and hyphens with spaces.
+ *
+ * @param input - The input string to be formatted.
+ * @returns The formatted string with capitalized first letters and spaces instead of underscores and hyphens.
+ *
+ * @example
+ * // Returns "Hello World"
+ * formatWordString("hello_world");
+ *
+ * @example
+ * // Returns "Good Morning China"
+ * formatWordString("good-morning_china");
+ */
+function formatWordString(input: string): string {
+    // Replace all '_' and '-' with ' '
+    const result = input.replace(/[_-]/g, ' ');
+
+    // Split the string into an array of words
+    let words = result.split(' ');
+
+    // Capitalize the first letter of each word
+    words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+
+    // Join the processed words back into a single string
+    return words.join(' ');
 }
