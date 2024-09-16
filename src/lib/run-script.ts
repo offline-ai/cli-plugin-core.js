@@ -110,6 +110,7 @@ interface IRunScriptOptions {
   streamEcho?: boolean|string
   streamEchoChars?: number
   logUpdate?: (...text: string[]) => void
+  runtime?: AIScriptEx
 }
 
 function logUpdate(...text: string[]) {
@@ -224,7 +225,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   }
 
   let quit = false
-  const runtime = await script.getRuntime(false) as AIScriptEx
+  const runtime = options.runtime = await script.getRuntime(false) as AIScriptEx
   runtime.on('error', (error: any) => {
     if (error.name !== 'AbortError') {
       console.error(error)
