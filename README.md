@@ -45,9 +45,9 @@ npm install -g @offline-ai/cli
 ```
 USAGE
   $ ai run [FILE] [DATA] [--json] [-c <value>] [--banner] [-u <value>] [-s <value>...] [-l
-    silence|fatal|error|warn|info|debug|trace] [-h <value>] [-n] [-k] [-t <value> -i] [--no-chats] [--no-inputs ] [-m]
-    [-f <value>] [-d <value>] [-D <value>...] [-a <value>] [-b <value>] [-p <value>...] [-L <value>] [-A <value>] [-e
-    true|false|line] [--consoleClear]
+    silence|fatal|error|warn|info|verbose|debug|trace] [-h <value>] [-n] [-k] [-t <value> -i] [--no-chats] [--no-inputs
+    ] [-m] [-f <value>] [-d <value>] [-D <value>...] [-a <value>] [-b <value>] [-p <value>...] [-L <value>] [-A <value>]
+    [-e true|false|line] [-e <value>] [--consoleClear]
 
 ARGUMENTS
   FILE  the script file path, or the json data when `-f` switch is set
@@ -65,12 +65,13 @@ FLAGS
   -d, --dataFile=<value>               the data file which will be passed to the ai-agent script
   -e, --streamEcho=<option>            [default: true] stream echo mode, defaults to true
                                        <options: true|false|line>
+  -e, --streamEchoChars=<value>        stream echo max characters limit, defaults to no limit
   -f, --script=<value>                 the ai-agent script file name or id
   -h, --histories=<value>              the chat histories folder to record
   -i, --[no-]interactive               interactive mode
   -k, --backupChat                     whether to backup chat history before start, defaults to false
   -l, --logLevel=<option>              the log level
-                                       <options: silence|fatal|error|warn|info|debug|trace>
+                                       <options: silence|fatal|error|warn|info|verbose|debug|trace>
   -m, --[no-]stream                    stream mode, defaults to true
   -n, --[no-]newChat                   whether to start a new chat history, defaults to false in interactive mode, true
                                        in non-interactive
