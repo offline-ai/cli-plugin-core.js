@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.8.5](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.4...v0.8.5) (2024-09-19)
+
+
+### Bug Fixes
+
+* aborter before exit ([0c9092c](https://github.com/offline-ai/cli-plugin-core.js/commit/0c9092cd417bb5d5e5bed0486ff3c910e394946b))
+
 ## [0.8.4](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.3...v0.8.4) (2024-09-19)
 
 ## [0.8.3](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.2...v0.8.3) (2024-09-18)
