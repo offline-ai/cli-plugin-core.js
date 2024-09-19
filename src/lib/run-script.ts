@@ -194,8 +194,12 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   let script
   const aborter = new AbortController()
   process.once('SIGINT', () => {
-    aborter.abort()}
-  )
+    aborter.abort()
+  })
+
+  process.once('exit', function () {
+    aborter.abort()
+  })
 
   try {
     script = await AIScriptEx.loadFile(filename,
