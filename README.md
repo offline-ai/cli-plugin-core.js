@@ -44,8 +44,8 @@ npm install -g @offline-ai/cli
 
 ```
 USAGE
-  $ ai run [FILE] [DATA] [--json] [-c <value>] [--banner] [-u <value>] [-s <value>...] [-l
-    trace|debug|verbose|info|warn|error|fatal|silence] [--histories <value>] [-n] [-k] [-t <value> -i] [--no-chats]
+  $ ai run [FILE] [DATA] [--json] [-c <value>] [--banner] [-u <value>] [--apiKey <value>] [-s <value>...]
+    [-l trace|debug|verbose|info|warn|error|fatal|silence] [--histories <value>] [-n] [-k] [-t <value> -i] [--no-chats]
     [--no-inputs ] [-m] [-f <value>] [-d <value>] [-D <value>...] [-a <value>] [-b <value>] [-p <value>...] [-L <value>]
     [-A <value>] [-e true|false|line] [-e <value>] [--consoleClear]
 
@@ -78,6 +78,7 @@ FLAGS
   -s, --agentDirs=<value>...           the search paths for ai-agent script file
   -t, --inputs=<value>                 the input histories folder for interactive mode to record
   -u, --api=<value>                    the api URL
+      --apiKey=<value>                 the api key (optional)
       --[no-]banner                    show banner
       --[no-]consoleClear              Whether console clear after stream echo output, default to true
       --histories=<value>              the chat histories folder to record
@@ -98,7 +99,7 @@ EXAMPLES
   │[info]:Start Script: ...
 ```
 
-_See code: [src/commands/run/index.ts](https://github.com/offline-ai/cli-plugin-core.js/blob/v0.8.2/src/commands/run/index.ts)_
+_See code: [src/commands/run/index.ts](https://github.com/offline-ai/cli-plugin-core.js/blob/v0.8.4/src/commands/run/index.ts)_
 <!-- commandsstop -->
 
 # Credit
