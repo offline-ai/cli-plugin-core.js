@@ -18,7 +18,7 @@ description: |-
   # begin your script prompts
   ...
   assistant: "[[THE_CONTENT]]"
-  # the assistant's response(`THE_CONTENT`) will be passed into the `json` script as `content` input:
+  # the assistant's response(`THE_CONTENT`) will be chained passed into the `json` script as `content` input:
   -> json(output=output)
   ```
   Or, run it directly:

@@ -44,11 +44,11 @@ assistant: I am Dobby. Dobby is happy.
 
 **Introduction:**
 
-This file defines a simple text file loader library for the Programmable Prompt Engine (PPE).
+This file defines a simple text file/url loader library for the Programmable Prompt Engine (PPE).
 
 **Key Functionality:**
 
-* **Loads text files:** Reads the contents of text files specified by a file path.
+* **Loads text files:** Reads the contents of text files specified by a file path or url.
 * **Environment Variable Support:** Allows use of environment variables within file paths (e.g., "$HOME/documents/document.md").
 * **Prompt Integration:** Designed to be integrated into PPE prompts, allowing users to reference file content directly within prompts (e.g., `user: summary the following file content: @file(document.md)`).
 
@@ -247,3 +247,30 @@ assistant: "Translate: @translator(file='document.md', target='English')"
 2. If the source language is not specified, it attempts to automatically detect it.
 3. It then constructs a prompt for a language model, instructing it to translate the input text into the target language.
 4. The translated text, along with the original text, source language, and target language, are returned as an object.
+
+## url
+
+**Introduction:**
+
+This file defines a simple fetch url library for the Programmable Prompt Engine (PPE).
+
+**Key Functionality:**
+
+* **Loads web content from url:** Reads the content specified by a url path.
+* **Prompt Integration:** Designed to be integrated into PPE prompts, allowing users to reference url content directly within prompts (e.g., `user: summary the following web page: @url("https://example.com/page.html")`).
+
+**Input Configuration:**
+
+* **`content`:** (Required) A string representing the url to fetch.
+
+**Output Configuration:**
+
+* **`type: "string"`:** Returns the loaded web content as a string. The output is formatted with the `web url` and `web content` separated by a newline.
+
+**Usage Example:**
+
+```yaml
+user: summary the following web content: @url("https://example.com/page.html")
+```
+
+This prompt instructs the PPE to load the content from "https://example.com/page.html" and then summarize the loaded text.
