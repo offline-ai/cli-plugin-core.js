@@ -49,7 +49,6 @@ export async function initTools(this: Hook.Context, userConfig: any, _config: Co
     if (providerUriParts[1]) {
       provider.model = providerUriParts[1]
     }
-    console.log('🚀 ~ initTools ~ provider.model:', provider.model)
 
     // the event-bus for server
     ResServerTools.register(event)
