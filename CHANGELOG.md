@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.8.7](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.6...v0.8.7) (2024-09-25)
+
+
+### Features
+
+* add openai provider ([509d077](https://github.com/offline-ai/cli-plugin-core.js/commit/509d077819d7d07fa475c1e890fc343b1f400de2))
+
 ## [0.8.6](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.5...v0.8.6) (2024-09-25)
 
 ## [0.8.5](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.4...v0.8.5) (2024-09-19)
