@@ -6,6 +6,7 @@ import {
 } from '@isdk/ai-tool'
 import { llm, LLMProvider } from '@isdk/ai-tool-llm'
 import { LlamaCppProviderName, llamaCpp } from '@isdk/ai-tool-llm-llamacpp'
+import { openai } from '@isdk/ai-tool-llm-openai'
 import { AIPromptsFunc, AIPromptsName } from '@isdk/ai-tool-prompt'
 import { download } from '@isdk/ai-tool-downloader'
 import type { Hook, Config } from '@oclif/core'
@@ -25,6 +26,7 @@ function initRegisteredProviders() {
 }
 
 registerProvider(llamaCpp)
+registerProvider(openai)
 
 export async function initTools(this: Hook.Context, userConfig: any, _config: Config) {
   try {

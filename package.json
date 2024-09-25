@@ -15,6 +15,7 @@
     "@isdk/ai-tool-downloader": "workspace:*",
     "@isdk/ai-tool-llm": "workspace:*",
     "@isdk/ai-tool-llm-llamacpp": "workspace:*",
+    "@isdk/ai-tool-llm-openai": "workspace:*",
     "@isdk/ai-tool-prompt": "workspace:*",
     "@isdk/detect-text-language": "^0.1.1",
     "@oclif/core": "^4",
