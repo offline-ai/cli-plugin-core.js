@@ -14,6 +14,7 @@ import {
   formatISO,
   getMultiLevelExtname,
   getPackageDir,
+  hasDirectoryIn,
   parseJsJson,
   readFilenamesRecursiveSync,
   toDateTime,
@@ -183,13 +184,17 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   const scriptBasename = path.basename(filename, scriptExtName)
   if (!AIScriptEx.searchPaths) {
     AIScriptEx.searchPaths = [scriptRootDir]
-  } else {
+  } else if (!hasDirectoryIn(scriptRootDir, AIScriptEx.searchPaths)) {
     AIScriptEx.searchPaths.push(scriptRootDir)
   }
 
   if (Array.isArray(options.agentDirs) && options.agentDirs.length) {
-    options.agentDirs = expandConfig(options.agentDirs, options) as any[]
-    AIScriptEx.searchPaths.push(...options.agentDirs)
+    const agentDirs = options.agentDirs = expandConfig(options.agentDirs, options) as any[]
+    for (const agentDir of agentDirs) {
+      if (agentDir && !hasDirectoryIn(agentDir, AIScriptEx.searchPaths)) {
+        AIScriptEx.searchPaths.push(agentDir)
+      }
+    }
   }
 
   let script
