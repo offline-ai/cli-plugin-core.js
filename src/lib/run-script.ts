@@ -7,7 +7,7 @@ import path from 'path'
 import colors from 'ansi-colors'
 // import cliSpinners from 'cli-spinners'
 import _logUpdate from 'log-update'
-import { get as getByPath } from 'lodash-es'
+import { get as getByPath, omitBy } from 'lodash-es'
 import {
   ConfigFile,
   countRegexMatches,
@@ -170,6 +170,8 @@ function renameOldFile(filename: string, backupChat?: boolean) {
     }
   }
 }
+
+let hasInited = false
 export async function runScript(filename: string, options: IRunScriptOptions) {
   // initTools(options)
 
@@ -199,20 +201,27 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   let script
   const aborter = new AbortController()
-  process.once('SIGINT', () => {
-    aborter.abort()
-  })
+  if (!hasInited) {
+    process.once('SIGINT', () => {
+      aborter.abort()
+    })
 
-  process.once('exit', function () {
-    aborter.abort()
-  })
+    process.once('exit', function () {
+      aborter.abort()
+    })
+  }
 
   try {
+    const USER_ENV = omitBy(options, (v, k) => {
+      const vT = typeof v
+      return k?.[0] === '_' || v == null || vT === 'function' || (vT === 'object' && !Array.isArray(v)) || vT === 'symbol'
+    })
+
     script = await AIScriptEx.loadFile(filename,
       {chatsDir: options.chatsDir},
       {
         ABORT_SEARCH_SCRIPTS_SIGNAL: aborter.signal,
-        USER_ENV: options,
+        USER_ENV,
         FUNC_SCOPE: {
           expandPath: function(path: string) {
             // for formatting
@@ -277,8 +286,11 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     console.log('quit for interrupted.')
     process.exit(0)
   }
-  process.once('SIGINT', interrupted)
-  process.once('beforeExit', saveChatHistory)
+
+  if (!hasInited) {
+    process.once('SIGINT', interrupted)
+    process.once('beforeExit', saveChatHistory)
+  }
 
   let llmLastContent = ''
   let retryCount = 0
@@ -329,6 +341,8 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       }
     })
   }
+
+  hasInited = true
 
   let lastError: any
   try {
