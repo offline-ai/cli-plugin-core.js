@@ -35,7 +35,8 @@ const scriptRootDir = path.join(getPackageDir(__dirname), 'lib')
 const YouCharName = 'You:'
 
 const consoleInput = enquier.prompt
-class AIScriptEx extends AIScriptServer {
+
+export class AIScriptEx extends AIScriptServer {
   $detectLang(text: string) {
     return detectLang(text)
   }
