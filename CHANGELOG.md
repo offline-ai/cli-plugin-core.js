@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.8.9](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.8...v0.8.9) (2024-09-30)
+
+
+### Bug Fixes
+
+* add hasInited and filter USER_ENV ([dd7ad7b](https://github.com/offline-ai/cli-plugin-core.js/commit/dd7ad7b6bc5e7653ac875dc12e9eb8bd933aebce))
+* check search dir whether already added ([6b46c6f](https://github.com/offline-ai/cli-plugin-core.js/commit/6b46c6fc2159a2af2369280e08d68e0ea5e48172))
+
+
+### Refactor
+
+* use ansicolor instead of ansi-colors ([76ea2c7](https://github.com/offline-ai/cli-plugin-core.js/commit/76ea2c7112496252199f8495eea22d87d98a4311))
+
 ## [0.8.8](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.7...v0.8.8) (2024-09-25)
 
 ## [0.8.7](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.6...v0.8.7) (2024-09-25)
