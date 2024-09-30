@@ -20,7 +20,7 @@
     "@isdk/detect-text-language": "^0.1.1",
     "@oclif/core": "^4",
     "@offline-ai/cli-common": "workspace:*",
-    "ansi-colors": "^4.1.3",
+    "ansicolor": "^2.0.3",
     "color-json": "^3.0.5",
     "enquirer": "^2.4.1",
     "lodash-es": "^4.17.21",

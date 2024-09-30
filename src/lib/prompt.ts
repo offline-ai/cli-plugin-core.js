@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import enquier from 'enquirer'
-import colors from 'ansi-colors'
+import colors from 'ansicolor'
 // Input extends StringPrompt
 const Input = (enquier as any).Input
 

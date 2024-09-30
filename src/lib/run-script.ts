@@ -4,7 +4,7 @@ import { ux } from '@oclif/core'
 import util from 'util'
 import fs from 'fs'
 import path from 'path'
-import colors from 'ansi-colors'
+import colors from 'ansicolor'
 // import cliSpinners from 'cli-spinners'
 import _logUpdate from 'log-update'
 import { get as getByPath, omitBy } from 'lodash-es'
@@ -368,7 +368,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 } finally {
     if (!isSilence) {logUpdate.clear(options.consoleClear)}
     if (lastError) {
-      console.log(colors.magentaBright(`<${lastError}>`))
+      console.log(colors.lightMagenta(`<${lastError}>`))
       lastError = undefined
     }
   }
@@ -460,7 +460,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         } finally {
           if (!isSilence) {logUpdate.clear(options.consoleClear)}
           if (lastError) {
-            input.write(colors.magentaBright(`<${lastError}>\n`))
+            input.write(colors.lightMagenta(`<${lastError}>\n`))
             lastError = undefined
           }
         }
