@@ -12,6 +12,7 @@ import {
   ConfigFile,
   countRegexMatches,
   formatISO,
+  formatTextWithSpace,
   getMultiLevelExtname,
   getPackageDir,
   hasDirectoryIn,
@@ -333,7 +334,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       if (!isSilence && llmLastContent) {
         if (options.consoleClear) {
           if (!id && runtime.id) {id = runtime.id}
-          mLogUpdate((id ? '['+formatWordString(id)+']: ' : '')+llmLastContent)
+          mLogUpdate((id ? '['+formatTextWithSpace(id)+']: ' : '')+llmLastContent)
         } else {
           process.stdout.write(s)
           logUpdate.dirt = true
@@ -586,32 +587,4 @@ export function parseCommandString(commandString: string): { command: string, ar
   const args: any[] = argsString ? parseJsJson(argsString) : []
 
   return { command, args };
-}
-
-/**
- * Formats a given string by capitalizing the first letter of each word and replacing underscores and hyphens with spaces.
- *
- * @param input - The input string to be formatted.
- * @returns The formatted string with capitalized first letters and spaces instead of underscores and hyphens.
- *
- * @example
- * // Returns "Hello World"
- * formatWordString("hello_world");
- *
- * @example
- * // Returns "Good Morning China"
- * formatWordString("good-morning_china");
- */
-function formatWordString(input: string): string {
-    // Replace all '_' and '-' with ' '
-    const result = input.replace(/[_-]/g, ' ');
-
-    // Split the string into an array of words
-    let words = result.split(' ');
-
-    // Capitalize the first letter of each word
-    words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-
-    // Join the processed words back into a single string
-    return words.join(' ');
 }
