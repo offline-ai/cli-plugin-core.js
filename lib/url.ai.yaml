@@ -17,17 +17,7 @@ input:
   - onlyContent: {type: "boolean"}  # Only return the content
 output: # the web page content
   type: "string"
+import:
+  './load-url.js': ['loadUrl']
 ---
-!fn |-
-  async function loadUrl() {
-    let url = this.content || this[0]
-    let options = {}
-    if (!this.sslVerify && url.startsWith('https://')) {
-      const https = await import('https');
-      const agent = new https.Agent({ rejectUnauthorized: false })
-      options.agent = agent
-    }
-    const content = await fetch(url, options).then(res => res.text())
-    return `web url: ${url}\nweb content:\n${content}`
-  }
 $loadUrl
