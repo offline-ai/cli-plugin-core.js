@@ -417,7 +417,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
                 const r = getByPath(runtime, command.slice(1))
                 console.log(command, '=', util.inspect(r, {showHidden: false, depth: 9, colors: true}))
               } else {
-                const {command: cmd, args} = parseCommandString(command)
+                const {command: cmd, args} = await parseCommandString(command)
                 try {
                   const r = await runtime[cmd](args)
                   if (r) {console.log(r)}
@@ -574,7 +574,7 @@ export async function typeToPrompt(prompt: any, input: string) {
   }
 }
 
-export function parseCommandString(commandString: string): { command: string, args: string[] } {
+export async function parseCommandString(commandString: string): Promise<{ command: string, args: string[] }> {
   const regex = /^([\w$]+)(?:\((.*)\))?$/i;
   const match = commandString.match(regex);
 
@@ -584,7 +584,7 @@ export function parseCommandString(commandString: string): { command: string, ar
 
   const command = match[1]
   const argsString = match[2] ? '[' + match[2].trim() + ']' : undefined;
-  const args: any[] = argsString ? parseJsJson(argsString) : []
+  const args: any[] = argsString ? (await parseJsJson(argsString)) : []
 
   return { command, args };
 }

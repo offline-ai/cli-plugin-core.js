@@ -7,9 +7,9 @@ import { AICommand, AICommonFlags, expandPath, showBanner } from '@offline-ai/cl
 import {runScript} from '../../../lib/run-script.js'
 
 
-function parseJsonInput(input: string) {
+async function parseJsonInput(input: string) {
   try {
-    return parseJsJson(input)
+    return await parseJsJson(input)
   } catch(e) {
     return input
   }
@@ -57,7 +57,7 @@ export default class RunScript extends AICommand {
       args.data = args.file
     }
 
-    args.data = parseJsonInput(args.data)
+    args.data = await parseJsonInput(args.data)
     const userConfig = await this.loadConfig(flags.config, {...opts, skipLoadHook: true})
     logLevel.json = isJson
     const hasBanner = userConfig.banner ?? userConfig.interactive
