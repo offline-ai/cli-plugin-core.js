@@ -7,12 +7,13 @@ description: |-
   It can be used in prompt. eg, `user: "think about the following file content: @file(document.md)"`
 tag:
   - file
+  - url
   - loader
   - prompt
   - lib
 input:
-  - 0                               # The file path passed by the prompt(position argument)
-  - content                         # The file path passed by the prompt
+  - content: {index: 0}             # The file path passed by the prompt, index: the position argument
+  - maxSize: {type: "number"}       # truncate the file content to this size if exists
   - sslVerify: {type: "boolean"}
   - onlyContent: {type: "boolean"}  # Only return the content
 output: # the file content

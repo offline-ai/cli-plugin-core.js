@@ -204,6 +204,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   const aborter = new AbortController()
   if (!hasInited) {
     process.once('SIGINT', () => {
+      console.log('🚀 ~ process.once ~ SIGINT!')
       aborter.abort()
     })
 
@@ -304,7 +305,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
       if (quit) {
         runtime.abortTool('quit')
-        process.emit('SIGINT')
+        process.exit()
       }
 
       if (options.streamEcho === false) {return}
