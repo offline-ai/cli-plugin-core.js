@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.8.13](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.12...v0.8.13) (2024-12-15)
+
 ## [0.8.12](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.11...v0.8.12) (2024-12-15)
 
 
