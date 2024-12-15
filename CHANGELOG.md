@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.8.12](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.11...v0.8.12) (2024-12-15)
+
+
+### Features
+
+* add background arg and excludeModels ([3f45f87](https://github.com/offline-ai/cli-plugin-core.js/commit/3f45f87e48b90042b9fdcb87abd39b24b6c26bc5))
+* add maxSize to file and url rt lib ([252564b](https://github.com/offline-ai/cli-plugin-core.js/commit/252564bf1e1660c5371653d514e96ae413297693))
+
+
+### Refactor
+
+* extract formatTextWithSpace to ai-tool ([2db3fc4](https://github.com/offline-ai/cli-plugin-core.js/commit/2db3fc40761fa7cf2326b3f94c4d5aaa6a7cb87d))
+* following upstream ([e0a96bf](https://github.com/offline-ai/cli-plugin-core.js/commit/e0a96bf8259c976850be2062b51cd80e32bfc263))
+* seperate the js code from PPE script ([9e6d100](https://github.com/offline-ai/cli-plugin-core.js/commit/9e6d1001d55ccb5c72ad1cf9fd6c2efc1b0e5d44))
+
 ## [0.8.11](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.10...v0.8.11) (2024-10-07)
 
 ## [0.8.10](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.9...v0.8.10) (2024-10-04)
