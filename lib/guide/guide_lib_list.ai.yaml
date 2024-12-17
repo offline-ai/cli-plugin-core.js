@@ -36,7 +36,7 @@ file: "README.md"
 #     - Output JSON format, following the JSON schema:
 #     {{output}}
 #     ---
-#     @file({{__dirname + file}})
+#     [[@file({{__dirname + file}})]]
 # - user: Output all urls with title in markdown format from the README.md
 # - assistant: "[[urls:temperature=0.01]]"
 # - -> summary(file={{__dirname + file}}, content)

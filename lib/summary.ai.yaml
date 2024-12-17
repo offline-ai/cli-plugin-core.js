@@ -5,7 +5,7 @@ description: |-
   Summarize the content or a text file in detail, capturing the key points and essence of the document.
   It takes a filepath as input and outputs a concise summary that reflects the main theme or content.
 
-  It can be used in prompt. eg, `Summary: @summary(file=document.md)`
+  It can be used in prompt. eg, `Summary: [[@summary(file=document.md)]]`
 
   Or, run it directly:
 
@@ -32,7 +32,7 @@ output:
 - $if: "this.file"
   then:
     $set:
-      fileContent: "@file({{file}})"
+      fileContent: "[[@file({{file}})]]"
 - system: |-
     Summarize the following content or file provided by the user in detail, capturing the key points and essence of it.
     {% if len and len > 0 %}

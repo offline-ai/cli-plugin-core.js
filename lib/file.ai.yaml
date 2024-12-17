@@ -4,7 +4,7 @@ type: lib
 description: |-
   the simple text file loader. You can use environment variables in file path, eg, "$HOME/documents/document.md".
 
-  It can be used in prompt. eg, `user: "think about the following file content: @file(document.md)"`
+  It can be used in prompt. eg, `user: "think about the following file content: [[@file(document.md)]]"`
 tag:
   - file
   - url

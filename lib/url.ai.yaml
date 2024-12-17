@@ -4,7 +4,7 @@ type: lib
 description: |-
   the simple fetch web page content from url.
 
-  It can be used in prompt. eg, `user: "think about the following web content: @url(https://www.example.com)"`
+  It can be used in prompt. eg, `user: "think about the following web content: [[@url(https://www.example.com)]]"`
 tag:
   - url
   - loader
