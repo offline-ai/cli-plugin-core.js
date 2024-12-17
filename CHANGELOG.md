@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.9.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.17...v0.9.0) (2024-12-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* Change the Advanced Script Invocation Formatting Spec from `@script` to `[[@script]]`
+
+### Refactor
+
+* Change the Advanced Script Invocation Formatting Spec from `[@script](https://github.com/script)` to `[[[@script](https://github.com/script)]]` ([9082a8d](https://github.com/offline-ai/cli-plugin-core.js/commit/9082a8dd48b99f6053efe89781fda84ad97c9421))
+
 ## [0.8.17](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.16...v0.8.17) (2024-12-17)
 
 
