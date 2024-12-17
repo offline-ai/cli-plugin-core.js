@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.8.17](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.16...v0.8.17) (2024-12-17)
+
+
+### Features
+
+* add instruction option ([3c1fa89](https://github.com/offline-ai/cli-plugin-core.js/commit/3c1fa893daaa43e972c1831f8d735254945e02cb))
+
+
+### Bug Fixes
+
+* update for summary ([6f58fcc](https://github.com/offline-ai/cli-plugin-core.js/commit/6f58fcc4e77f0582ce840587ac017f6bb541bda3))
+
 ## [0.8.16](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.15...v0.8.16) (2024-12-17)
 
 ## [0.8.15](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.8.14...v0.8.15) (2024-12-17)
