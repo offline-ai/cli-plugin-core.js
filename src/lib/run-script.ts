@@ -382,15 +382,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
     // const spinner = cliSpinners.dots
     const aiName = runtime.character?.name || runtime.name || 'ai'
-
-    const latestMessages = await runtime.getLatestMessages()
-    if (latestMessages && latestMessages.length > 0) {
-      for (const msg of latestMessages) {
-        const char = msg.role === 'user' ? colors.blue('You') : (msg.role === 'assistant' ? colors.yellow(aiName): undefined)
-        if (!char) {continue}
-        console.log(char + ':', msg.content)
-      }
-    }
+    await runtime.printLatestMessages()
 
     const inputsHistoryFilename = options.inputsDir ? path.join(options.inputsDir, scriptBasename, 'history.yaml') : undefined
     const store = new HistoryStore(inputsHistoryFilename)
