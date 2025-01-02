@@ -112,7 +112,7 @@ Import one file:
 
 ```yaml
 ---
-import: "js_package_name"
+import: "js:js_package_name"
 ---
 ```
 
@@ -121,7 +121,7 @@ Import many files Use Array Format:
 ```yaml
 ---
 import:
-  - "js_package_name"
+  - "js:js_package_name"
   - "js/script/path.js": ['func1', 'func2', {func3: 'asFunc3'}] # Import only the specified functions
   - 'ruby-funcs.rb'
   - "agent.ai.yaml": "asName" # Import the script and rename it to "$asName"
@@ -133,7 +133,7 @@ Use Object Format:
 ```yaml
 ---
 import: # Object Format
-  "js_package_name": "*"
+  "js:js_package_name": "*"
   "js/script/path.js": ['func1', 'func2']
   "agent.ai.yaml": "asName"
 ---
@@ -147,9 +147,25 @@ import: # Object Format
 * If the function `initializeModule` exists in the module and is imported, it will be automatically executed after the module loads.
 * Currently, only `javascript` support has been implemented.
 
-## Script File and Directory
+## Script File and Package
 
-A PPE script can be a single file or an entire directory. If it is a file, the filename must end with `.ai.yaml`. If it's a directory, it must contain a script file with the same name as the directory to serve as the entry point. Additionally, other script files within the same directory can call each other.
+A PPE script can be a single file or an entire directory as package. If it is a file, the filename must end with `.ai.yaml`.
+
+If it's a package(directory), The package name is the same as the directory name. The root directory of the package must contain a script file with the same name as the directory, which serves as the package entry script. Additionally, other script files within the same directory can call each other.
+
+For example, if there is a package directory named `a-dir`, the entry script in that directory should be named `a-dir/a-dir.ai.yaml`.
+
+The functions exported by the package are determined by the `export` configuration in the entry file.
+
+```yaml
+---
+export:
+  - "$hi"
+  - "./dobby.ai.yaml"
+---
+!fn |-
+  [js]hi() {console.log('hi')}
+```
 
 For example, if there is a directory named `a-dir`, the entry point script file should be named `a-dir/a-dir.ai.yaml`.
 
