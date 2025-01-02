@@ -32,7 +32,6 @@ $echo: "#A total of {{LatestResult}} pieces of candy"
 
 `calculator.ai.yaml`:
 
-
 ```yaml
 ---
 # Below is the front-matter configuration
