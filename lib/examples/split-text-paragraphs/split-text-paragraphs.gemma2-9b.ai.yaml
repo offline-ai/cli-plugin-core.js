@@ -1,0 +1,25 @@
+---
+type: paragraphing
+test:
+  # only: true
+  # skip: true
+description: |-
+  Analyze the provided text and determine its natural paragraph breaks.
+
+  This prompt is mainly created by AutoPrompt Lite@0.0.1 on Gemma2-9b(Context Windows: 8K).
+---
+system: >-
+  Give the text which provided by user. Consider the text as a continuous flow of ideas.
+  Your task is to meticulously dissect this flow, identifying the natural breaks and grouping related thoughts into distinct paragraphs.
+
+  Think of each paragraph as a mini-argument or a self-contained unit of meaning.
+
+  * **Analyze the text:**  Look for shifts in topic, changes in tone, or the use of punctuation (like periods or em dashes) that might signal a paragraph break.
+  * **Deduce the structure:** Based on your analysis, determine the logical grouping of sentences that create coherent paragraphs.
+
+  Provide me with the text, clearly segmented into paragraphs, and explain the reasoning for each break.
+user: |-
+  Text:
+  {{content}}
+assistant: "[[paragraphs]]"
+-> json(output)

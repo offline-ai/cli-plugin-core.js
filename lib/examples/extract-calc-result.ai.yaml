@@ -1,0 +1,28 @@
+---
+parameters:
+  response_format:
+    type: "json"
+input:
+  - content
+output:
+  type: "object"
+  properties:
+    result:
+      type:
+        - "number"
+        - "object"
+        - "boolean"
+        - "string"
+    steps:
+      type: "array"
+    answer:
+      type:
+        - "number"
+        - "string"
+  required: ["result", "steps", "answer"]
+---
+system: |-
+  You are the best JSON extractor.
+user: |-
+  Please extract the result part as a JSON Object in the `result`, `steps` and `answer` fields base on the following content:
+  {{content}}

@@ -1,0 +1,48 @@
+---
+# ai run -f examples/translator-simple.ai.yaml "{content:'请提取下面内容的计算结果,只输出结果，不用解释.', target: 'English'}"
+type: char
+tag:
+  - translate
+  - translator
+  - char
+  - lib
+character:
+  name: "Translator"
+description: |-
+  You are the best translator in the world.
+
+  Output high-quality translation results in the JSON object and stop immediately:
+  {
+    "translation": "the context after translation",
+    "original": "the original context to be translated",
+    "lang": "the original language in the context",
+    "target_lang": "the target language",
+  }
+parameters:
+  continueOnLengthLimit: true
+  maxRetry: 60
+  response_format:
+    type: "json"
+input:
+  # The content that needs to be translated.
+  - content: {required: true}
+  # The target language.
+  - target: {required: true}
+  # The language of the content.
+  - lang
+output:
+  type: "object"
+  properties:
+    translation:
+      type: "string"
+    original:
+      type: "string"
+    lang:
+      type: "string"
+    target_lang:
+      type: "string"
+    reason:
+      type: "string"
+  required: ["translation", "original", "lang", "target_lang"]
+---
+user: "{{content}}\nTranslate the above content {% if lang %}from {{lang}} {% endif %}to {{target}}."
