@@ -2,25 +2,30 @@ import fs from 'fs'
 import path from 'path'
 import enquier from 'enquirer'
 import colors from 'ansicolor'
+// import { beforeShutdown } from './before-shutdown.js'
 // Input extends StringPrompt
 const Input = (enquier as any).Input
 
 let GlobalStore: HistoryStore|undefined
 
+/*
 function save() {
   if (GlobalStore) {
     GlobalStore.save()
   }
+  console.log('save input done')
 }
+*/
+// process.once('beforeExit', function () {
+//   save()
+// });
 
-process.once('beforeExit', function () {
-  save()
-});
+// // catch ctrl+c event and exit normally
+// process.once('SIGINT', function () {
+//   save()
+// });
 
-// catch ctrl+c event and exit normally
-process.once('SIGINT', function () {
-  save()
-});
+// beforeShutdown(save)
 
 export function setHistoryStore(store?: HistoryStore) {
   GlobalStore = store

@@ -25,6 +25,7 @@ import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
 import { expandConfig, expandPath } from '@offline-ai/cli-common'
+import { beforeShutdown, shutdown } from './before-shutdown.js';
 // import { initTools } from './init-tools.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -203,14 +204,18 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   let script
   const aborter = new AbortController()
   if (!hasInited) {
-    process.once('SIGINT', () => {
-      console.log('🚀 ~ process.once ~ SIGINT!')
+    beforeShutdown(() => {
+      // console.log('🚀 ~ process.once ~ SIGINT!')
       aborter.abort()
     })
+    // process.once('SIGINT', () => {
+    //   console.log('🚀 ~ process.once ~ SIGINT!')
+    //   aborter.abort()
+    // })
 
-    process.once('exit', function () {
-      aborter.abort()
-    })
+    // process.once('exit', function () {
+    //   aborter.abort()
+    // })
   }
 
   try {
@@ -235,7 +240,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     )
   } catch(err) {
     console.error('Load script error:',err)
-    process.exit(1)
+    await shutdown('loadScriptError', 1)
   }
   const chatsFilename = script.getChatsFilename()
   if ((options.newChat || options.backupChat) && chatsFilename) { renameOldFile(chatsFilename, options.backupChat) }
@@ -257,7 +262,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   let quit = false
   const runtime = options.runtime = await script.getRuntime(false) as AIScriptEx
-  runtime.on('error', (error: any) => {
+  runtime.on('error', async (error: any) => {
     if (error.name !== 'AbortError') {
       console.error(error)
       const cause = error.cause
@@ -267,7 +272,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
           console.error(`Are you sure the brain(LLM) server is running on ${options.apiUrl}?`)
         }
       }
-      process.exit(1)
+      await shutdown('ECONNREFUSED', 1)
     }
   })
 
@@ -277,21 +282,25 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     }
   }
 
-  const interrupted = async () => {
+  const interrupted = () => {
     quit = true
-    if (runtime.isToolAborted()) {
-      await saveChatHistory()
-    } else {
+    if (!runtime.isToolAborted()) {
       runtime.abortTool()
     }
-    await wait(100)
-    console.log('quit for interrupted.')
-    process.exit(0)
+    // await wait(100)
+    // console.log('quit for interrupted.')
+    // process.exit(0)
   }
 
   if (!hasInited) {
-    process.once('SIGINT', interrupted)
-    process.once('beforeExit', saveChatHistory)
+    beforeShutdown(interrupted)
+    // process.once('SIGINT', interrupted)
+    beforeShutdown(saveChatHistory)
+    // process.once('beforeExit', async() => {
+    //   console.log('🚀 ~ beforeExit ~ chatsFilename:', chatsFilename)
+    //   await saveChatHistory()
+    //   console.log('🚀 ~ beforeExit ~ done')
+    // })
   }
 
   let llmLastContent = ''
@@ -305,7 +314,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
       if (quit) {
         runtime.abortTool('quit')
-        process.exit()
+        await shutdown()
       }
 
       if (options.streamEcho === false) {return}
