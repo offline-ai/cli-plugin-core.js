@@ -12,7 +12,6 @@ function save() {
   if (GlobalStore) {
     GlobalStore.save()
   }
-  console.log('save input done')
 }
 
 // process.once('beforeExit', function () {
