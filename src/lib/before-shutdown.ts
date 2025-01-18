@@ -26,7 +26,7 @@ export type BeforeShutdownListener = (signalOrEvent: string) => Promise<void>|vo
  *
  * SIGINT, a.k.a Ctrl + C, and SIGTERM by default
  */
-export const SHUTDOWN_SIGNALS = ['SIGINT', 'SIGTERM'];
+export const SHUTDOWN_SIGNALS = ['SIGINT', 'SIGTERM', 'exit'];
 
 /**
  * Time in milliseconds to wait before forcing shutdown.
