@@ -1,8 +1,8 @@
 import cj from 'color-json'
 import {Args, Flags} from '@oclif/core'
-import { parseJsJson } from '@isdk/ai-tool'
+import { expandPath, parseJsJson } from '@isdk/ai-tool'
 import { LogLevelMap, logLevel } from '@isdk/ai-tool-agent'
-import { AICommand, AICommonFlags, expandPath, showBanner } from '@offline-ai/cli-common'
+import { AICommand, AICommonFlags, showBanner } from '@offline-ai/cli-common'
 
 import {runScript} from '../../../lib/run-script.js'
 

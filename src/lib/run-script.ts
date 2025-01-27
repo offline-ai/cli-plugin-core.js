@@ -11,6 +11,7 @@ import { get as getByPath, omitBy } from 'lodash-es'
 import {
   ConfigFile,
   countRegexMatches,
+  expandConfig, expandPath,
   formatISO,
   formatTextWithSpace,
   getMultiLevelExtname,
@@ -24,7 +25,6 @@ import {
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
-import { expandConfig, expandPath } from '@offline-ai/cli-common'
 import { beforeShutdown, shutdown } from './before-shutdown.js';
 // import { initTools } from './init-tools.js'
 
