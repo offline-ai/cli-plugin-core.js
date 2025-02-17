@@ -2,7 +2,7 @@ import cj from 'color-json'
 import {Args, Flags} from '@oclif/core'
 import { expandPath, parseJsJson } from '@isdk/ai-tool'
 import { LogLevelMap, logLevel } from '@isdk/ai-tool-agent'
-import { AICommand, AICommonFlags, showBanner } from '@offline-ai/cli-common'
+import { AICommand, AICommonFlags, colors, showBanner } from '@offline-ai/cli-common'
 
 import {runScript} from '../../../lib/run-script.js'
 
@@ -78,6 +78,9 @@ export default class RunScript extends AICommand {
     try {
       await this.config.runHook('config:load', {id: 'run', userConfig})
       let result = await runScript(script, userConfig)
+      if (result?._ctxThink) {
+        this.log(colors.gray('[Thinking]:\n' + result._ctxThink + '\n'))
+      }
       if (LogLevelMap[userConfig.logLevel] >= LogLevelMap.info && result?.content) {
         result = result.content
       }
