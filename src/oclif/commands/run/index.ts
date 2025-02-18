@@ -85,7 +85,7 @@ export default class RunScript extends AICommand {
         result = result.content
       }
       if (!userConfig.interactive && result != null) {
-        this.log(typeof result === 'string' ? result : cj(result))
+        this.log(typeof result === 'string' || result instanceof String ? '' + result : cj(result))
       }
       return result
     } catch (error: any) {
