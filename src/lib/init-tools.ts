@@ -5,6 +5,7 @@ import {
   ServerTools,
 } from '@isdk/ai-tool'
 import { llm, LLMProvider } from '@isdk/ai-tool-llm'
+import { LocalProviderName, LocalProvider } from '@isdk/ai-tool-llm-local'
 import { LlamaCppProviderName, llamaCpp } from '@isdk/ai-tool-llm-llamacpp'
 import { openai } from '@isdk/ai-tool-llm-openai'
 import { AIPromptsFunc, AIPromptsName } from '@isdk/ai-tool-prompt'
@@ -19,14 +20,17 @@ export function registerProvider(provider: LLMProvider) {
   providers[provider.name!] = provider
 }
 
-function initRegisteredProviders() {
+function initRegisteredProviders(rootDir: string) {
+  const local = new LocalProvider(LocalProviderName, {rootDir})
+  registerProvider(local)
+  registerProvider(llamaCpp)
+  registerProvider(openai)
+
   for (const provider of Object.values(providers)) {
     provider.register()
   }
 }
 
-registerProvider(llamaCpp)
-registerProvider(openai)
 
 export async function initTools(this: Hook.Context, userConfig: any, _config: Config) {
   try {
@@ -37,7 +41,7 @@ export async function initTools(this: Hook.Context, userConfig: any, _config: Co
     ServerTools.register(llm)
 
     // llamaCpp.register()
-    initRegisteredProviders()
+    initRegisteredProviders(userConfig.brainDir)
 
     let currentProviderName = userConfig.provider || LlamaCppProviderName
     const providerUriParts = currentProviderName.split('://')
