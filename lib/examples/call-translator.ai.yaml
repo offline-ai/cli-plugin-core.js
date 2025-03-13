@@ -1,7 +1,0 @@
----
-description: |-
-  Demonstrate how to call the translator script
----
-- "tell me a funny joke in English. Output the joke without any explanation."
-- assistant: "[[thinking]]"
--> translator(target="中文")

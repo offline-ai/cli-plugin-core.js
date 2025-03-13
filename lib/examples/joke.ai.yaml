@@ -1,4 +1,0 @@
-assistant: "讲个笑话：[[JOKE]] 希望您喜欢！"
--> $print(JOKE)
-$ret('')
-# $|print: "?='小：：'+ this.prompt.messages[0].content + '\\n\\n'"  # 访问存储于prompt中的AI生成的笑话:第一个消息的内容
