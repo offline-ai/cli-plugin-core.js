@@ -12,6 +12,7 @@ import {
   ConfigFile,
   countRegexMatches,
   expandConfig, expandPath,
+  event,
   formatISO,
   formatTextWithSpace,
   getMultiLevelExtname,
@@ -22,6 +23,7 @@ import {
   toDateTime,
   wait,
 } from '@isdk/ai-tool'
+import { LocalProviderProgressEventName } from '@isdk/ai-tool-llm-local'
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
@@ -217,8 +219,16 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     //   aborter.abort()
     // })
   }
+  const mLogUpdate = options.logUpdate ?? logUpdate
 
   try {
+    const eventBus = event.runSync();
+    eventBus.on(LocalProviderProgressEventName, (progress: number, {filepath, type}: {filepath: string, type: string}) => {
+      mLogUpdate(`Loading ${type} ${path.basename(filepath)} ${(progress*100).toFixed(2)}%`)
+      // if (progress === 1) logUpdate.clear(true)
+      // if (progress === 1) console.log(`Loading ${type} ${path.basename(filepath)} done!`)
+    })
+
     const USER_ENV = omitBy(options, (v, k) => {
       const vT = typeof v
       return k?.[0] === '_' || v == null || vT === 'function' || (vT === 'object' && !Array.isArray(v)) || vT === 'symbol'
@@ -307,7 +317,6 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   let retryCount = 0
 
   if (stream) {
-    const mLogUpdate = options.logUpdate ?? logUpdate
     runtime.on('llmStream', async function(llmResult, content: string, count: number, id?: string) {
       const runtime = this.target as AIScriptEx
       let s = llmResult.content
