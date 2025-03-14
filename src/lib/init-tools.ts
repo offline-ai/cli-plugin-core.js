@@ -16,8 +16,11 @@ export const BRAINS_FUNC_NAME = 'llm.brains'
 
 const providers: {[name: string]: LLMProvider} = {}
 
-export function registerProvider(provider: LLMProvider) {
-  providers[provider.name!] = provider
+export function registerProvider(provider: LLMProvider, name?: string) {
+  if (!name) {
+    name = provider.name!
+  }
+  providers[name] = provider
 }
 
 function initRegisteredProviders(rootDir: string) {
@@ -29,6 +32,9 @@ function initRegisteredProviders(rootDir: string) {
   for (const provider of Object.values(providers)) {
     provider.register()
   }
+
+  // add aliases:
+  registerProvider(local, 'local')
 }
 
 
@@ -49,9 +55,10 @@ export async function initTools(this: Hook.Context, userConfig: any, _config: Co
     if (!providers[currentProviderName]) {throw new Error(`Provider ${currentProviderName} not found`)}
 
     const provider = providers[currentProviderName]
-    llm.setCurrentProvider(currentProviderName)
+    llm.setCurrentProvider(provider.name!)
     if (providerUriParts[1]) {
       provider.model = providerUriParts[1]
+      provider.defaultModel = providerUriParts[1]
     }
 
     // the event-bus for server
