@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import enquier from 'enquirer'
 import colors from 'ansicolor'
-import { beforeShutdown } from './before-shutdown.js'
+import { beforeShutdown } from '@isdk/ai-tool'
 // Input extends StringPrompt
 const Input = (enquier as any).Input
 

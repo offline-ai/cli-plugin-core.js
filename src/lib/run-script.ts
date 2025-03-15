@@ -27,7 +27,7 @@ import { LocalProviderProgressEventName } from '@isdk/ai-tool-llm-local'
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
-import { beforeShutdown, shutdown } from './before-shutdown.js';
+import { beforeShutdown, shutdown } from '@isdk/ai-tool';
 // import { initTools } from './init-tools.js'
 
 const __filename = fileURLToPath(import.meta.url)
