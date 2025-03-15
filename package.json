@@ -10,6 +10,8 @@
   "repository": "https://github.com/offline-ai/cli-plugin-core.js",
   "bugs": "https://github.com/@offline-ai/cli-plugin-core.js/issues",
   "dependencies": {
+    "@isdk/ai-pack-core": "workspace:*",
+    "@isdk/ai-pack-pro": "workspace:*",
     "@isdk/ai-tool": "workspace:*",
     "@isdk/ai-tool-agent": "workspace:*",
     "@isdk/ai-tool-downloader": "workspace:*",

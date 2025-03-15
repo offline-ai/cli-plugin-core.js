@@ -22,17 +22,21 @@ import {
   readFilenamesRecursiveSync,
   toDateTime,
   wait,
+  beforeShutdown, shutdown,
 } from '@isdk/ai-tool'
 import { LocalProviderProgressEventName } from '@isdk/ai-tool-llm-local'
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
-import { beforeShutdown, shutdown } from '@isdk/ai-tool';
+
+import '@isdk/ai-pack-core'
+import '@isdk/ai-pack-pro'
 // import { initTools } from './init-tools.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+// @ts-ignore
 const scriptRootDir = path.join(getPackageDir(__dirname), 'lib')
 
 // const endWithSpacesRegEx = /[\s\n\r]+$/
@@ -188,12 +192,13 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   const scriptExtName = getMultiLevelExtname(filename, 2)
   const scriptBasename = path.basename(filename, scriptExtName)
+/*
   if (!AIScriptEx.searchPaths) {
     AIScriptEx.searchPaths = [scriptRootDir]
   } else if (!hasDirectoryIn(scriptRootDir, AIScriptEx.searchPaths)) {
     AIScriptEx.searchPaths.push(scriptRootDir)
   }
-
+*/
   if (Array.isArray(options.agentDirs) && options.agentDirs.length) {
     const agentDirs = options.agentDirs = expandConfig(options.agentDirs, options) as any[]
     for (const agentDir of agentDirs) {
