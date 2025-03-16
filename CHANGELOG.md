@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.10.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.9.4...v0.10.0) (2025-03-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* use core, pro ai packages
+* extract ppe files to core package
+* extract before-shutdown to ai-tool
+
+### Features
+
+* add beforeShutdown ([feff6a7](https://github.com/offline-ai/cli-plugin-core.js/commit/feff6a7510ba352b9eee315ab22b5c4480015278))
+* add examples ([b9be894](https://github.com/offline-ai/cli-plugin-core.js/commit/b9be8947ceb05d775c62ffa24f65bbde88203758))
+* add load progress for local provider ([e30515d](https://github.com/offline-ai/cli-plugin-core.js/commit/e30515dbfe4a4427935cc666c25476a1c3b4426f))
+* add local provider ([8c12fa7](https://github.com/offline-ai/cli-plugin-core.js/commit/8c12fa7ec71ce722513167b0424e19fcc7f0fd7b))
+* add package desc ([6b2c00d](https://github.com/offline-ai/cli-plugin-core.js/commit/6b2c00d230cabde9153bc577f7f22146f35f9380))
+* show thinking ([07e6d15](https://github.com/offline-ai/cli-plugin-core.js/commit/07e6d15d9ac29858e74f3576b9447e8949bff265))
+* use core, pro ai packages ([ed97555](https://github.com/offline-ai/cli-plugin-core.js/commit/ed9755528b6c155726d658f9f589cd578485dc1a))
+
+
+### Bug Fixes
+
+* do not trans if preferLang is en ([d7b499e](https://github.com/offline-ai/cli-plugin-core.js/commit/d7b499ea9874a8e290fbe8bd77aa57a60b3f555c))
+* pass model correctly for local provider ([1e98000](https://github.com/offline-ai/cli-plugin-core.js/commit/1e98000f7e081fc85d9e36c3ac73b934261e28d1))
+* should print String correctly ([8300591](https://github.com/offline-ai/cli-plugin-core.js/commit/8300591a30c882e27c8a35dc8f38bea2c5ed1f46))
+* the async func can not be exec when exit ([70d25d5](https://github.com/offline-ai/cli-plugin-core.js/commit/70d25d5254714b10aeabf4cf36bb7227dbdc2f24))
+* the normal exit should trigger the beforeShutdown ([cc67f5e](https://github.com/offline-ai/cli-plugin-core.js/commit/cc67f5ec6ba74f3f216c9a859ba3ee4708498cd8))
+* use the new beforeShutdown to save input ([d7dc4bc](https://github.com/offline-ai/cli-plugin-core.js/commit/d7dc4bc696545c8ce45dcf0b04907a00cfae0371))
+
+
+### Refactor
+
+* extract before-shutdown to ai-tool ([5e4f589](https://github.com/offline-ai/cli-plugin-core.js/commit/5e4f589cc6c12f0591ac5078b81e80fba37a74b5))
+* extract ppe files to core package ([d2e5a61](https://github.com/offline-ai/cli-plugin-core.js/commit/d2e5a61ad44458ce8fbfe057e2adc04c25a1bad0))
+* follow cli-common ([37b2635](https://github.com/offline-ai/cli-plugin-core.js/commit/37b26354ec5c2f03c14e2437426a3cb9c4f69dbf))
+
 ## [0.9.4](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.9.3...v0.9.4) (2024-12-22)
 
 ## [0.9.3](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.9.2...v0.9.3) (2024-12-19)
