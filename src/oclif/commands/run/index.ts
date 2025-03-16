@@ -1,6 +1,7 @@
 import cj from 'color-json'
 import {Args, Flags} from '@oclif/core'
 import { expandPath, parseJsJson } from '@isdk/ai-tool'
+// @ts-ignore
 import { LogLevelMap, logLevel } from '@isdk/ai-tool-agent'
 import { AICommand, AICommonFlags, colors, showBanner } from '@offline-ai/cli-common'
 

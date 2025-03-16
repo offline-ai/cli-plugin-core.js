@@ -23,8 +23,10 @@ import {
   toDateTime,
   wait,
   beforeShutdown, shutdown,
+  EventEmitter,
 } from '@isdk/ai-tool'
 import { LocalProviderProgressEventName } from '@isdk/ai-tool-llm-local'
+// @ts-ignore
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
@@ -44,6 +46,16 @@ const scriptRootDir = path.join(getPackageDir(__dirname), 'lib')
 const YouCharName = 'You:'
 
 const consoleInput = enquier.prompt
+
+
+export declare namespace AIScriptEx {
+  let searchPaths: string[]
+  function loadFile(...args: any[]): any
+  function getMatchedScriptInfos(...args: any[]): any
+}
+export interface AIScriptEx extends EventEmitter {
+  [name: string]: any
+}
 
 export class AIScriptEx extends AIScriptServer {
   $detectLang(text: string) {
