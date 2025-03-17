@@ -21,20 +21,17 @@ export function registerProvider(provider: LLMProvider, name?: string) {
     name = provider.name!
   }
   providers[name] = provider
+  provider.register()
 }
 
 function initRegisteredProviders(rootDir: string) {
-  const local = new LocalProvider(LocalProviderName, {rootDir})
+  const local = new LocalProvider(LocalProviderName, {rootDir, alias: ['local']})
   registerProvider(local)
   registerProvider(llamaCpp)
   registerProvider(openai)
 
-  for (const provider of Object.values(providers)) {
-    provider.register()
-  }
-
   // add aliases:
-  registerProvider(local, 'local')
+  // registerProvider(local, 'local')
 }
 
 
@@ -52,9 +49,10 @@ export async function initTools(this: Hook.Context, userConfig: any, _config: Co
     let currentProviderName = userConfig.provider || LlamaCppProviderName
     const providerUriParts = currentProviderName.split('://')
     currentProviderName = providerUriParts[0]
-    if (!providers[currentProviderName]) {throw new Error(`Provider ${currentProviderName} not found`)}
+    const provider = llm.getProvider(currentProviderName)
+    if (!provider) {throw new Error(`Provider ${currentProviderName} not found`)}
 
-    const provider = providers[currentProviderName]
+    // const provider = providers[currentProviderName]
     llm.setCurrentProvider(provider.name!)
     if (providerUriParts[1]) {
       provider.model = providerUriParts[1]
