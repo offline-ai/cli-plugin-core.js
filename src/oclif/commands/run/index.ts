@@ -15,6 +15,8 @@ async function parseJsonInput(input: string) {
     return input
   }
 }
+
+// @ts-ignore
 export default class RunScript extends AICommand {
   static args = {
     file: Args.string({

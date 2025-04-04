@@ -6,7 +6,7 @@ import {
 } from '@isdk/ai-tool'
 import { llm, LLMProvider } from '@isdk/ai-tool-llm'
 import { LocalProviderName, LocalProvider } from '@isdk/ai-tool-llm-local'
-import { LlamaCppProviderName, llamaCpp } from '@isdk/ai-tool-llm-llamacpp'
+import { llamaCpp } from '@isdk/ai-tool-llm-llamacpp'
 import { openai } from '@isdk/ai-tool-llm-openai'
 import { AIPromptsFunc, AIPromptsName } from '@isdk/ai-tool-prompt'
 import { download } from '@isdk/ai-tool-downloader'
@@ -46,7 +46,7 @@ export async function initTools(this: Hook.Context, userConfig: any, _config: Co
     // llamaCpp.register()
     initRegisteredProviders(userConfig.brainDir)
 
-    let currentProviderName = userConfig.provider || LlamaCppProviderName
+    let currentProviderName = userConfig.provider || LocalProviderName
     const providerUriParts = currentProviderName.split('://')
     currentProviderName = providerUriParts[0]
     const provider = llm.getProvider(currentProviderName)
@@ -56,7 +56,7 @@ export async function initTools(this: Hook.Context, userConfig: any, _config: Co
     llm.setCurrentProvider(provider.name!)
     if (providerUriParts[1]) {
       provider.model = providerUriParts[1]
-      provider.defaultModel = providerUriParts[1]
+      provider.defaultModelName = providerUriParts[1]
     }
 
     // the event-bus for server

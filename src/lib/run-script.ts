@@ -25,7 +25,8 @@ import {
   beforeShutdown, shutdown,
   EventEmitter,
 } from '@isdk/ai-tool'
-import { LocalProviderProgressEventName } from '@isdk/ai-tool-llm-local'
+import { llm } from '@isdk/ai-tool-llm'
+import { LocalProviderName, LocalProviderProgressEventName } from '@isdk/ai-tool-llm-local'
 // @ts-ignore
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
@@ -82,7 +83,7 @@ export class AIScriptEx extends AIScriptServer {
     return stat?.isDirectory()
   }
 
-  $listFilenames(params: {dir: string|string[], recursive?: boolean, extname?: string[]|string, aborter?: AbortController}) {
+  $listFilenames(params: {dir: string|string[], recursive?: boolean, extname?: string[]|string, aborter?: AbortController, level?: number}) {
     const options: any = {}
     if (params) {
       if (params.extname) {
@@ -93,6 +94,8 @@ export class AIScriptEx extends AIScriptServer {
       }
       if (params.recursive === false) {
         options.level = 1
+      } else if (typeof params.level === 'number') {
+        options.level = params.level
       }
       if (params.aborter instanceof AbortController) {
         options.signal = params.aborter.signal
@@ -143,6 +146,7 @@ interface IRunScriptOptions {
   streamEchoChars?: number
   logUpdate?: (...text: string[]) => void
   runtime?: AIScriptEx
+  brainDir: string
 }
 
 function logUpdate(...text: string[]) {
@@ -289,6 +293,74 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   let quit = false
   const runtime = options.runtime = await script.getRuntime(false) as AIScriptEx
+  const currentProvider = llm.getCurrentProvider()
+  if (currentProvider?.name === LocalProviderName && !currentProvider.defaultModelName && !runtime.parameters?.model) {
+    const default_model_filepath = path.join(options.brainDir, 'DEFAULT_MODEL_NAME.txt');
+    let defaultModelName: string | undefined
+    if (fs.existsSync(default_model_filepath)) {
+      defaultModelName = fs.readFileSync(default_model_filepath, 'utf8')
+      if (defaultModelName) {
+        if (!defaultModelName.endsWith('.gguf')) {
+          defaultModelName += '.gguf'
+        }
+        const filepath = path.isAbsolute(defaultModelName) ? defaultModelName : path.join(options.brainDir, defaultModelName)
+        if (!fs.existsSync(filepath)) {
+          console.log('⚠️  The default model file does not exist:', defaultModelName)
+          defaultModelName = undefined
+        }
+      }
+    }
+    if (!defaultModelName) {
+      const models = readFilenamesRecursiveSync(options.brainDir, {isFileMatched: (filename)=> filename.endsWith('.gguf'), level: 1, resolveSymlinks: false})
+        .map((filename)=>path.relative(options.brainDir, filename));
+      if (models.length) {
+        const {modelName} = await consoleInput<{modelName: string}>({
+          type: 'autocomplete',
+          name: 'modelName',
+          message: 'Please Choose a model as default model for the local LLM provider.',
+          choices: models,
+        })
+        console.log('🚀 ~ file: run-script.ts:308 ~ modelName:', modelName)
+        if (modelName) {
+          defaultModelName = modelName
+          fs.writeFileSync(default_model_filepath, defaultModelName, 'utf8')
+          console.log('✍️  Write the default model name into file:', default_model_filepath)
+        }
+      } else {
+        const {modelName} = await consoleInput<{modelName: string}>({
+          type: 'input',
+          name: 'modelName',
+          message: 'No model found in the brain directory. You need to donwload a model first.\nPlease input the huggingface 🧠 model name(Author/Repo) or url to download GGUF model:',
+          initial: 'Qwen/Qwen2.5-3B-Instruct-GGUF'
+        })
+        let hfUrl: string | undefined
+        if (!modelName.includes('://')) {
+          const {url} = await consoleInput<{url: string}>({
+            type: 'input',
+            name: 'url',
+            message: 'The huggingface mirror url to speed up downloading(Optional):',
+            validate: (input) => {
+              if (input && !/^https?:\/\//.test(input)) return 'Please starts with http:// or https://'
+              return true
+            },
+           })
+           if (url) hfUrl = url.trim()
+        }
+        const args = [modelName]
+        if (hfUrl) {
+          args.push('-u ' + hfUrl)
+        }
+        const dnResult = await options.ThisCmd.config.runCommand('brain:download', args)
+        if (Array.isArray(dnResult) && dnResult.length) {
+          defaultModelName = dnResult[0].filepath
+        }
+      }
+    }
+    if (defaultModelName) {
+      currentProvider.defaultModelName = defaultModelName
+    }
+  }
+
   runtime.on('error', async (error: any) => {
     if (error.name !== 'AbortError') {
       console.error(error)
