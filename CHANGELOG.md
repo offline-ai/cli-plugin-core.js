@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.11.0](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.10.10...v0.11.0) (2025-04-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* use local provider as first and download model automatically
+
+### Refactor
+
+* use local provider as first and download model automatically ([da68651](https://github.com/offline-ai/cli-plugin-core.js/commit/da686515f09d9a0f7492d7a0bc5e32500f594a2c))
+
 ## [0.10.10](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.10.9...v0.10.10) (2025-03-23)
 
 ## [0.10.9](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.10.8...v0.10.9) (2025-03-23)
