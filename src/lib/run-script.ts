@@ -320,7 +320,6 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
           message: 'Please Choose a model as default model for the local LLM provider.',
           choices: models,
         })
-        console.log('🚀 ~ file: run-script.ts:308 ~ modelName:', modelName)
         if (modelName) {
           defaultModelName = modelName
           fs.writeFileSync(default_model_filepath, defaultModelName, 'utf8')
