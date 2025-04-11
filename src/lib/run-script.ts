@@ -426,7 +426,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         llmLastContent = ''
       }
 
-      if (options.streamEcho === 'line' && countRegexMatches(llmLastContent, /[\n\r]/) >= 1) {
+      if (options.consoleClear && options.streamEcho === 'line' && countRegexMatches(llmLastContent, /[\n\r]/) >= 1) {
         // logUpdate.clear(options.consoleClear)
         llmLastContent = ''
       }
