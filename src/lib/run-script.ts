@@ -256,7 +256,10 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     })
 
     script = await AIScriptEx.loadFile(filename,
-      {chatsDir: options.chatsDir},
+      {
+        chatsDir: options.chatsDir,
+        shouldLoadChats: !options.newChat,
+      },
       {
         ABORT_SEARCH_SCRIPTS_SIGNAL: aborter.signal,
         USER_ENV,
@@ -273,8 +276,8 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     console.error('Load script error:',err)
     await shutdown('loadScriptError', 1)
   }
+
   const chatsFilename = script.getChatsFilename()
-  if ((options.newChat || options.backupChat) && chatsFilename) { renameOldFile(chatsFilename, options.backupChat) }
 
   let isSilence = false
 
@@ -376,6 +379,10 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   const saveChatHistory = async () => {
     if (chatsFilename) {
+      if ((options.newChat || options.backupChat) && chatsFilename) {
+        renameOldFile(chatsFilename, options.backupChat)
+      }
+
       await runtime.$saveChats(chatsFilename)
     }
   }
@@ -565,7 +572,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
           }
         }
         if (result) {
-          const isString = typeof result === 'string'
+          const isString = result instanceof String || typeof result === 'string'
           if (!isString) {
             result = ux.colorizeJson(result, {pretty: true, theme: options.theme?.json})
           }
