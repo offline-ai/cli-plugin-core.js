@@ -445,10 +445,10 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         mLogUpdate(llmLastContent)
       }
 
-      if (!isSilence && llmLastContent) {
+      if (!isSilence) {
         if (options.consoleClear) {
           if (!id && runtime.id) {id = runtime.id}
-          mLogUpdate((id ? '['+formatTextWithSpace(id)+']: ' : '') + llmLastContent.trim())
+          if (llmLastContent) mLogUpdate((id ? '['+formatTextWithSpace(id)+']: ' : '') + llmLastContent.trim())
         } else {
           process.stdout.write(s)
           logUpdate.dirt = true
