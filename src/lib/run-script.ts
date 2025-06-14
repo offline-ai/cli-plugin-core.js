@@ -34,6 +34,7 @@ import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
 
 import '@isdk/ai-pack-core'
 import '@isdk/ai-pack-pro'
+import '@isdk/ai-pack-tool'
 // import { initTools } from './init-tools.js'
 
 const __filename = fileURLToPath(import.meta.url)

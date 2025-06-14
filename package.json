@@ -12,6 +12,7 @@
   "dependencies": {
     "@isdk/ai-pack-core": "workspace:*",
     "@isdk/ai-pack-pro": "workspace:*",
+    "@isdk/ai-pack-tool": "workspace:*",
     "@isdk/ai-tool": "workspace:*",
     "@isdk/ai-tool-agent": "workspace:*",
     "@isdk/ai-tool-downloader": "workspace:*",
