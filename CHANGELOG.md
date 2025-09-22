@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.11.5](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.11.4...v0.11.5) (2025-09-22)
+
+
+### Features
+
+* add ai-pack-tool ([db15ace](https://github.com/offline-ai/cli-plugin-core.js/commit/db15ace95b16cc0c565390b65a2655d348148ef6))
+* export initTools ([b87031f](https://github.com/offline-ai/cli-plugin-core.js/commit/b87031fbd7c93b3a63698b5288858299385fa701))
+
+
+### Bug Fixes
+
+* do not eat linefeed when no-consoleClear ([0db3efa](https://github.com/offline-ai/cli-plugin-core.js/commit/0db3efaa7b541335aba0f9e1e44d6450f893294b))
+* rename file should before saveChatHistory ([2174c90](https://github.com/offline-ai/cli-plugin-core.js/commit/2174c90148581ee41dad4ef76dc83d79cc6d0e65))
+* sometime output missing words when no-consoleClear ([4f4eae8](https://github.com/offline-ai/cli-plugin-core.js/commit/4f4eae886ac2cef0e30241534fdb187c5971c411))
+
 ## [0.11.4](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.11.3...v0.11.4) (2025-04-07)
 
 ## [0.11.3](https://github.com/offline-ai/cli-plugin-core.js/compare/v0.11.2...v0.11.3) (2025-04-07)
