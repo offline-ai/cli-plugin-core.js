@@ -5,6 +5,7 @@ import {
   ServerTools,
 } from '@isdk/ai-tool'
 import { llm, LLMProvider } from '@isdk/ai-tool-llm'
+// @ts-ignore
 import { LocalProviderName, LocalProvider } from '@isdk/ai-tool-llm-local'
 import { llamaCpp } from '@isdk/ai-tool-llm-llamacpp'
 import { openai } from '@isdk/ai-tool-llm-openai'

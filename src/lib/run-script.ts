@@ -26,15 +26,16 @@ import {
   EventEmitter,
 } from '@isdk/ai-tool'
 import { llm } from '@isdk/ai-tool-llm'
+// @ts-ignore
 import { LocalProviderName, LocalProviderProgressEventName } from '@isdk/ai-tool-llm-local'
 // @ts-ignore
 import { AIScriptServer, LogLevel, LogLevelMap } from '@isdk/ai-tool-agent'
 import { detectTextLanguage as detectLang, detectTextLangEx, getLanguageFromIso6391 } from '@isdk/detect-text-language'
 import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
 
-import '@isdk/ai-pack-core'
-import '@isdk/ai-pack-pro'
-import '@isdk/ai-pack-tool'
+import '@isdk/ai-pack-core/register'
+import '@isdk/ai-pack-pro/register'
+import '@isdk/ai-pack-tool/register'
 // import { initTools } from './init-tools.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -297,7 +298,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
   let quit = false
   const runtime = options.runtime = await script.getRuntime(false) as AIScriptEx
-  const currentProvider = llm.getCurrentProvider()
+  const currentProvider = llm.getCurrentProvider()!
   if (currentProvider?.name === LocalProviderName && !currentProvider.defaultModelName && !runtime.parameters?.model) {
     const default_model_filepath = path.join(options.brainDir, 'DEFAULT_MODEL_NAME.txt');
     let defaultModelName: string | undefined
