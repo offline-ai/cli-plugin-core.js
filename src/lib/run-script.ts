@@ -310,7 +310,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         }
         const filepath = path.isAbsolute(defaultModelName) ? defaultModelName : path.join(options.brainDir, defaultModelName)
         if (!fs.existsSync(filepath)) {
-          console.log('⚠️  The default model file does not exist:', defaultModelName)
+          console.log('⚠️ The default model file does not exist:', defaultModelName)
           defaultModelName = undefined
         }
       }
