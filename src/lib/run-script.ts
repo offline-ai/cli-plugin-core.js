@@ -612,6 +612,12 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
       }
     }
   }
+  if (typeof result === 'string') {
+    result = new String(result)
+  }
+  if (result) {
+    result.messages = await runtime.$getMessages()
+  }
   return result
 }
 
