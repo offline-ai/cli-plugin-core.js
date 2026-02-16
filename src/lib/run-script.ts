@@ -616,7 +616,14 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     result = new String(result)
   }
   if (result) {
-    result.messages = await runtime.$getMessages()
+    const messages = await runtime.$getMessages()
+    if (messages && messages.length) {
+      Object.defineProperty(result, 'messages', {
+        value: messages,
+        enumerable: false,
+        configurable: true
+      })
+    }
   }
   return result
 }
