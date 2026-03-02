@@ -21,7 +21,7 @@ import {
   parseJsJson,
   readFilenamesRecursiveSync,
   toDateTime,
-  wait,
+  sleep,
   beforeShutdown, shutdown,
   EventEmitter,
 } from '@isdk/ai-tool'
@@ -691,7 +691,7 @@ export const keypressTimeout = 5
 export async function typeToPrompt(prompt: any, input: string) {
   for (const char of input) {
     await prompt.keypress(char)
-    await wait(keypressTimeout+ 10)
+    await sleep(keypressTimeout+ 10)
   }
 }
 
