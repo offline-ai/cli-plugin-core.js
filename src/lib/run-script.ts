@@ -297,7 +297,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   }
 
   let quit = false
-  const runtime = options.runtime = await script.getRuntime(false) as AIScriptEx
+  const runtime = options.runtime = await script.getRuntime() as AIScriptEx
   const currentProvider = llm.getCurrentProvider()!
   if (currentProvider?.name === LocalProviderName && !currentProvider.defaultModelName && !runtime.parameters?.model) {
     const default_model_filepath = path.join(options.brainDir, 'DEFAULT_MODEL_NAME.txt');
