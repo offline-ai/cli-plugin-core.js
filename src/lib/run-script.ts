@@ -36,6 +36,8 @@ import { prompt, setHistoryStore, HistoryStore } from './prompt.js'
 import '@isdk/ai-pack-core/register'
 import '@isdk/ai-pack-pro/register'
 import '@isdk/ai-pack-tool/register'
+import '@isdk/ai-pack-read-web/register'
+import '@isdk/ai-pack-search-web/register'
 // import { initTools } from './init-tools.js'
 
 const __filename = fileURLToPath(import.meta.url)
