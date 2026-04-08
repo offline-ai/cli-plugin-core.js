@@ -58,6 +58,7 @@ export declare namespace AIScriptEx {
   function loadFile(...args: any[]): any
   function getMatchedScriptInfos(...args: any[]): any
 }
+// @ts-ignore
 export interface AIScriptEx extends EventEmitter {
   [name: string]: any
 }
