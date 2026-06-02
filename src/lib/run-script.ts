@@ -494,6 +494,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   }
 
   let result = runtime.LatestResult
+  let meta = runtime.$getMeta()
 
   if (interactive) {
     runtime.$ready(true)
@@ -566,6 +567,7 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
 
         try {
           result = await runtime.$interact(llmOptions)
+          meta = runtime.$getMeta(result)
         } catch(error: any) {
           if (error.name !== 'AbortError') {throw error}
           lastError = error.name + (error.data?.what ? ':'+error.data.what : '')
@@ -623,6 +625,13 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     if (messages && messages.length) {
       Object.defineProperty(result, 'messages', {
         value: messages,
+        enumerable: false,
+        configurable: true
+      })
+    }
+    if (meta?.ai?.thinking) {
+      Object.defineProperty(result, '_ctxThink', {
+        value: meta.ai.thinking,
         enumerable: false,
         configurable: true
       })
