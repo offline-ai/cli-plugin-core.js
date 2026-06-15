@@ -636,6 +636,10 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
         configurable: true
       })
     }
+    const _meta = runtime.$getMeta(result)
+    if (!_meta && meta) {
+      runtime.wrap(result, meta)
+    }
   }
   return result
 }
