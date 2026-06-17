@@ -2,7 +2,7 @@ import cj from 'color-json'
 import {Args, Flags} from '@oclif/core'
 import { expandPath, parseJsJson } from '@isdk/ai-tool'
 // @ts-ignore
-import { LogLevelMap, logLevel } from '@isdk/ai-tool-agent'
+import { LogLevelMap, getMeta, logLevel } from '@isdk/ai-tool-agent'
 import { AICommand, AICommonFlags, colors, showBanner } from '@offline-ai/cli-common'
 
 import {runScript} from '../../../lib/run-script.js'
@@ -77,6 +77,7 @@ export default class RunScript extends AICommand {
       userConfig.logLevel = userConfig.interactive ? 'error' : 'warn'
     }
     userConfig.ThisCmd = this
+    const logLevelId = LogLevelMap[userConfig.logLevel]
 
     try {
       await this.config.runHook('config:load', {id: 'run', userConfig})
@@ -84,11 +85,34 @@ export default class RunScript extends AICommand {
       if (result?._ctxThink) {
         this.log(colors.gray('[Thinking]:\n' + result._ctxThink + '\n'))
       }
-      if (LogLevelMap[userConfig.logLevel] >= LogLevelMap.info && result?.content) {
+      if (logLevelId >= LogLevelMap.verbose && result?.content) {
         result = result.content
       }
       if (!userConfig.interactive && result != null) {
         this.log(typeof result === 'string' || result instanceof String ? '' + result : cj(result))
+      }
+      if (logLevelId <= LogLevelMap.notice) {
+        // only for trace/debug/verbose/info/notice
+        const metaUsage = getMeta(result)?.ai?.parameters.usage
+        if (metaUsage) {
+          if (metaUsage.loadModelTime) {
+            const t = metaUsage.loadModelTime / 1000
+            this.log(colors.gray('Load Model Time: ' + t.toFixed(2) + 's'))
+          }
+          let tokens = metaUsage.prompt
+          if (tokens?.duration) {
+            const n = tokens.tokens / (tokens.duration / 1000)
+            this.log(colors.gray('Prompt eval: ' + n.toFixed(2) + ' tokens/s, Total: ' + tokens.tokens))
+          }
+          tokens = metaUsage.generation
+          if (tokens?.duration) {
+            const n = tokens.tokens / (tokens.duration / 1000)
+            this.log(colors.gray('Generation eval: ' + n.toFixed(2) + ' tokens/s, Total: ' + tokens.tokens))
+          }
+          if (metaUsage.graphsReused) {
+            this.log(colors.gray('Graphs Reused: ' + metaUsage.graphsReused))
+          }
+        }
       }
       return result
     } catch (error: any) {
