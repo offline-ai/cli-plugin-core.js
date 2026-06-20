@@ -152,6 +152,7 @@ interface IRunScriptOptions {
   logUpdate?: (...text: string[]) => void
   runtime?: AIScriptEx
   brainDir: string
+  performanceTracking?: boolean
 }
 
 function logUpdate(...text: string[]) {
@@ -462,6 +463,9 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     })
   }
 
+  if (options.performanceTracking) {
+    runtime.parameters.performanceTracking = true
+  }
   hasInited = true
 
   let lastError: any
