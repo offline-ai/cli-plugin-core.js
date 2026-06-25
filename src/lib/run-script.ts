@@ -224,6 +224,8 @@ export async function loadScript(filename: string, options: IRunScriptOptions) {
       const vT = typeof v
       return k?.[0] === '_' || v == null || vT === 'function' || (vT === 'object' && !Array.isArray(v)) || vT === 'symbol'
     })
+    const { logLevel: level } = options
+    if (level) {AIScriptEx.logLevel = level}
 
     const script = await AIScriptEx.loadFile(filename,
       {
