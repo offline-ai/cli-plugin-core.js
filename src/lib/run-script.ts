@@ -153,6 +153,7 @@ interface IRunScriptOptions {
   runtime?: AIScriptEx
   brainDir: string
   performanceTracking?: boolean
+  aborter?: AbortController
 }
 
 function logUpdate(...text: string[]) {
@@ -202,25 +203,8 @@ function renameOldFile(filename: string, backupChat?: boolean) {
 }
 
 let hasInited = false
-export async function runScript(filename: string, options: IRunScriptOptions) {
-  // initTools(options)
 
-  const { logLevel: level, interactive, stream, userPreferredLanguage, aiPreferredLanguage } = options
-
-  if (options.consoleClear === undefined) {
-    // options.consoleClear = interactive
-    options.consoleClear = true
-  }
-
-  const scriptExtName = getMultiLevelExtname(filename, 2)
-  const scriptBasename = path.basename(filename, scriptExtName)
-/*
-  if (!AIScriptEx.searchPaths) {
-    AIScriptEx.searchPaths = [scriptRootDir]
-  } else if (!hasDirectoryIn(scriptRootDir, AIScriptEx.searchPaths)) {
-    AIScriptEx.searchPaths.push(scriptRootDir)
-  }
-*/
+export async function loadScript(filename: string, options: IRunScriptOptions) {
   if (Array.isArray(options.agentDirs) && options.agentDirs.length) {
     const agentDirs = options.agentDirs = expandConfig(options.agentDirs, options) as any[]
     for (const agentDir of agentDirs) {
@@ -230,8 +214,58 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
     }
   }
 
-  let script
-  const aborter = new AbortController()
+  let aborter = options.aborter
+  if (!aborter) {
+    aborter = options.aborter = new AbortController()
+  }
+
+  try {
+    const USER_ENV = omitBy(options, (v, k) => {
+      const vT = typeof v
+      return k?.[0] === '_' || v == null || vT === 'function' || (vT === 'object' && !Array.isArray(v)) || vT === 'symbol'
+    })
+
+    const script = await AIScriptEx.loadFile(filename,
+      {
+        chatsDir: options.chatsDir,
+        shouldLoadChats: !options.newChat,
+      },
+      {
+        ABORT_SEARCH_SCRIPTS_SIGNAL: aborter.signal,
+        USER_ENV,
+        FUNC_SCOPE: {
+          expandPath: function(path: string) {
+            // for formatting
+            if (path && typeof path === 'object') {return (p: string)=>expandPath(p, options)}
+            return expandPath(path, options)
+          },
+        }
+      },
+    ) as AIScriptEx
+    return script
+  } catch(err) {
+    console.error('Load script error:',err)
+    await shutdown('loadScriptError', 1)
+    throw new Error('loadScriptError')
+  }
+}
+
+export async function runScript(filename: string | AIScriptEx, options: IRunScriptOptions) {
+  // initTools(options)
+
+  const { logLevel: level, interactive, stream, userPreferredLanguage, aiPreferredLanguage } = options
+
+  if (options.consoleClear === undefined) {
+    // options.consoleClear = interactive
+    options.consoleClear = true
+  }
+  const script = filename instanceof AIScriptEx ? filename : await loadScript(filename, options)
+  filename = script._env.__filename as string
+
+  const scriptExtName = getMultiLevelExtname(filename, 2)
+  const scriptBasename = path.basename(filename, scriptExtName)
+
+  const aborter = options.aborter || new AbortController()
   if (!hasInited) {
     beforeShutdown(() => {
       // console.log('🚀 ~ process.once ~ SIGINT!')
@@ -248,40 +282,13 @@ export async function runScript(filename: string, options: IRunScriptOptions) {
   }
   const mLogUpdate = options.logUpdate ?? logUpdate
 
-  try {
-    const eventBus = event.runSync();
-    eventBus.on(LocalProviderProgressEventName, (progress: number, {filepath, type}: {filepath: string, type: string}) => {
-      mLogUpdate(`Loading ${type} ${path.basename(filepath)} ${(progress*100).toFixed(2)}%`)
-      // if (progress === 1) logUpdate.clear(true)
-      // if (progress === 1) console.log(`Loading ${type} ${path.basename(filepath)} done!`)
-    })
+  const eventBus = event.runSync();
+  eventBus.on(LocalProviderProgressEventName, (progress: number, {filepath, type}: {filepath: string, type: string}) => {
+    mLogUpdate(`Loading ${type} ${path.basename(filepath)} ${(progress*100).toFixed(2)}%`)
+    // if (progress === 1) logUpdate.clear(true)
+    // if (progress === 1) console.log(`Loading ${type} ${path.basename(filepath)} done!`)
+  })
 
-    const USER_ENV = omitBy(options, (v, k) => {
-      const vT = typeof v
-      return k?.[0] === '_' || v == null || vT === 'function' || (vT === 'object' && !Array.isArray(v)) || vT === 'symbol'
-    })
-
-    script = await AIScriptEx.loadFile(filename,
-      {
-        chatsDir: options.chatsDir,
-        shouldLoadChats: !options.newChat,
-      },
-      {
-        ABORT_SEARCH_SCRIPTS_SIGNAL: aborter.signal,
-        USER_ENV,
-        FUNC_SCOPE: {
-          expandPath: function(path: string) {
-            // for formatting
-            if (path && typeof path === 'object') {return (p: string)=>expandPath(p, options)}
-            return expandPath(path, options)
-          },
-        }
-      },
-    )
-  } catch(err) {
-    console.error('Load script error:',err)
-    await shutdown('loadScriptError', 1)
-  }
 
   const chatsFilename = script.getChatsFilename()
 
